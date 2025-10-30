@@ -1,8 +1,13 @@
 package com.largeblueberry.bitquest.domain.model
 
-data class Quiz(
-    val id: Int,
-    val question: String,
-    val answer: Boolean, // true for O, false for X
-    val explanation: String
-)
+/**
+ * [작업 담당자: Android 개발자 (도메인 모델링 경험자)]
+ *
+ * TODO: 퀴즈 도메인 모델 정의
+ * - 퀴즈 ID, 제목, 내용, 선택지 (4개)
+ * - 정답 인덱스, 난이도, 카테고리
+ * - 생성일, 수정일, 태그 목록
+ * - 사용자별 풀이 상태 (미시도/완료/즐겨찾기)
+ * - 통계 정보 (정답률, 풀이 횟수)
+ * - 데이터 검증 로직 포함
+ */
