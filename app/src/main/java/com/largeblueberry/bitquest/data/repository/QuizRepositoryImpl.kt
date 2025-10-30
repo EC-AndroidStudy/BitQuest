@@ -1,5 +1,9 @@
 package com.largeblueberry.bitquest.data.repository
 
+import com.largeblueberry.bitquest.data.local.QuizLocalDataSource
+import com.largeblueberry.bitquest.domain.model.Quiz
+import com.largeblueberry.bitquest.domain.repository.QuizRepository
+import javax.inject.Inject
 /**
  * [작업 담당자: Android 개발자 (Repository 구현 경험)]
  *
@@ -11,3 +15,10 @@ package com.largeblueberry.bitquest.data.repository
  * - 에러 처리 및 fallback 로직
  * - Paging3 연동
  */
+class QuizRepositoryImpl @Inject constructor(
+    private val localDataSource: QuizLocalDataSource
+) : QuizRepository {
+    override fun getQuizzes(): List<Quiz> {
+        return localDataSource.getQuizzes()
+    }
+}
