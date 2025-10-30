@@ -1,5 +1,6 @@
 package com.largeblueberry.bitquest.domain.repository
 
+import com.largeblueberry.bitquest.domain.model.Quiz
 /**
  * [작업 담당자: Android 개발자 (Repository 패턴 이해)]
  *
@@ -11,3 +12,6 @@ package com.largeblueberry.bitquest.domain.repository
  * - 오프라인 캐싱 전략 정의
  * - Flow 기반 반응형 데이터 제공
  */
+interface QuizRepository {
+    fun getQuizzes(): List<Quiz>
+}
