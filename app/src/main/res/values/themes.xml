@@ -4,7 +4,7 @@
         <!--
             This theme is just a placeholder used by the Android operating system
             before your Compose UI renders. The actual theme for your app is
-            defined in the ui/theme/Theme.kt file.
+            defined in the ui/theme/Field.kt file.
         -->
     </style>
 
