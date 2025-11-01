@@ -1,4 +1,4 @@
-package com.largeblueberry.bitquest.ui.screens
+package com.largeblueberry.bitquest.feature_quiz.ui
 
 import androidx.lifecycle.ViewModel
 import com.largeblueberry.bitquest.domain.model.Choice

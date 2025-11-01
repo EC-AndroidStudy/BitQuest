@@ -1,4 +1,4 @@
-package com.largeblueberry.bitquest.ui.screens
+package com.largeblueberry.bitquest.feature_main
 
 /**
  * [작업 담당자: Android 개발자 (시니어/미드레벨)]
