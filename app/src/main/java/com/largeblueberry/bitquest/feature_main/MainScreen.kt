@@ -41,8 +41,8 @@ fun MainScreen(
                 .padding(innerPadding), // 시스템 UI 영역만 피하기
             cardData = uiState.cardData,
             onSolveClick = {
-                val quizId = QUIZ_ID.toInt()
-                navController.navigate(Screen.QuizDetail.createRoute(quizId))
+                // 테마 선택 화면으로 이동하도록 수정
+                navController.navigate(Screen.ThemeSelection.route)
             },
             onAiAnalysisClick = { viewModel.onAiAnalysis() },
             onMainClick = { viewModel.onNavigateToMain() },

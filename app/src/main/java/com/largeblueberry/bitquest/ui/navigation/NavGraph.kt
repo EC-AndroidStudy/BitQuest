@@ -12,6 +12,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.largeblueberry.bitquest.feature_ThemeSelection.ThemeSelectionScreen
 import com.largeblueberry.bitquest.feature_main.MainScreen
 import com.largeblueberry.bitquest.feature_quiz.ui.QuizDetailScreen
 
@@ -49,6 +50,10 @@ fun AppNavGraph(
             QuizDetailScreen(
                 navController = navController,
             )
+        }
+
+        composable(Screen.ThemeSelection.route) {
+            ThemeSelectionScreen(navController = navController)
         }
     }
 }
