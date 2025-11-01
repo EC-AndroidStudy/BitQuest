@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -90,67 +92,77 @@ private fun QuizSuccessContent(
     viewModel: QuizViewModel,
     onNavigateHome: () -> Unit
 ) {
-    // 5. 퀴즈가 종료되었는지 먼저 확인합니다.
+    // ... (함수 상단은 동일) ...
     if (contentState.isQuizFinished) {
-        // 종료 상태라면, 퀴즈 종료 화면을 보여줍니다.
-        QuizEndScreen(
-            onNavigateHome = onNavigateHome,
-            onRestartQuiz = { viewModel.restartQuiz() }
-        )
+        // ...
     } else {
-        // 퀴즈가 진행 중이라면, 현재 퀴즈 문제를 표시합니다.
         val currentQuiz = contentState.currentQuiz
-
         if (currentQuiz == null) {
-            // 퀴즈 목록은 불러왔지만 비어있는 예외적인 경우
-            Text(text = "표시할 퀴즈가 없습니다.")
+            // ...
         } else {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
+                // ... (ProblemBlock, ChoicesBlock 등은 동일) ...
                 ProblemBlock(quiz = currentQuiz)
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // 정답을 제출했을 때만 해설과 결과 블록을 표시
-                contentState.quizResult?.takeIf { contentState.showResult }?.let { quizResult ->
-                    ExplanationBlock(text = currentQuiz.explanation)
-                    Spacer(modifier = Modifier.height(16.dp))
-                    ResultBlock(
-                        isCorrect = quizResult.isCorrect,
-                        message = quizResult.resultMessage
-                    )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    if(contentState.showResult) {
+                        contentState.quizResult?.let { quizResult ->
+                            ExplanationBlock(text = currentQuiz.explanation)
+                            Spacer(modifier = Modifier.height(16.dp))
+                            ResultBlock(
+                                isCorrect = quizResult.isCorrect,
+                                message = quizResult.resultMessage
+                            )
+                        }
+                    }
+                    else {
+                        ChoicesBlock(
+                            quiz = currentQuiz,
+                            viewModel = viewModel,
+                            selectedAnswer = contentState.selectedAnswer,
+                            showResult = contentState.showResult
+                        )
+                    }
                 }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                ChoicesBlock(
-                    quiz = currentQuiz,
-                    viewModel = viewModel,
-                    selectedAnswer = contentState.selectedAnswer,
-                    showResult = contentState.showResult
-                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // 이전/다음 문제로 이동하는 버튼
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Button(
                         onClick = { viewModel.previousQuiz() },
-                        enabled = contentState.currentQuizIndex > 0 // 첫 문제에서는 비활성화
+                        enabled = contentState.currentQuizIndex > 0 && !contentState.showResult
                     ) {
                         Text("이전")
                     }
-                    Button(onClick = { viewModel.nextQuiz() }) {
-                        // 마지막 문제일 경우 버튼 텍스트를 변경하여 사용자에게 알려줌
-                        val buttonText = if (contentState.currentQuizIndex == contentState.quizzes.size - 1) {
-                            "결과 보기"
-                        } else {
-                            "다음"
+
+                    Button(
+                        onClick = {
+                            if (contentState.showResult) {
+                                viewModel.nextQuiz()
+                            } else {
+                                // --- 여기가 핵심 수정 부분입니다 ---
+                                // 잘못된 UseCase 호출 대신 ViewModel의 submitAnswer()를 호출합니다.
+                                viewModel.submitAnswer()
+                            }
+                        },
+                        enabled = contentState.selectedAnswer != null
+                    ) {
+                        val buttonText = when {
+                            contentState.showResult && contentState.currentQuizIndex < contentState.quizzes.size - 1 -> "다음 문제"
+                            contentState.showResult && contentState.currentQuizIndex == contentState.quizzes.size - 1 -> "결과 보기"
+                            else -> "정답 확인"
                         }
                         Text(buttonText)
                     }

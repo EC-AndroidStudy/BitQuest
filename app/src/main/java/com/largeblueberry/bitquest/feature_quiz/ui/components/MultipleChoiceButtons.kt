@@ -34,7 +34,7 @@ fun MultipleChoiceButtons(
                     ButtonDefaults.buttonColors(containerColor = it)
                 } ?: ButtonDefaults.buttonColors()
             ) {
-                Text(text = "${index + 1}. $text", modifier = Modifier.padding(8.dp))
+                Text(text = "$text", modifier = Modifier.padding(8.dp))
             }
         }
     }
