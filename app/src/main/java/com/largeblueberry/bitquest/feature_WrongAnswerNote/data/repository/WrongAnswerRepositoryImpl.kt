@@ -1,30 +1,45 @@
 package com.largeblueberry.bitquest.feature_WrongAnswerNote.data.repository
 
-import com.largeblueberry.bitquest.feature_WrongAnswerNote.data.WrongAnswerDao
-import com.largeblueberry.bitquest.feature_WrongAnswerNote.data.mapper.toDomain
-import com.largeblueberry.bitquest.feature_WrongAnswerNote.data.mapper.toEntity
-import com.largeblueberry.bitquest.feature_WrongAnswerNote.domain.model.WrongAnswerNote
+import android.content.Context
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.largeblueberry.bitquest.feature_WrongAnswerNote.data.WrongAnswer
 import com.largeblueberry.bitquest.feature_WrongAnswerNote.domain.repository.WrongAnswerRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.toMutableList
+import androidx.core.content.edit
 
 @Singleton
 class WrongAnswerRepositoryImpl @Inject constructor(
-    private val dao: WrongAnswerDao
+    @ApplicationContext private val context: Context
 ) : WrongAnswerRepository {
 
-    override fun observeAll(): Flow<List<WrongAnswerNote>> =
-        dao.observeAll().map { list -> list.map { it.toDomain() } }
+    private val sharedPrefs = context.getSharedPreferences("wrong_answers", Context.MODE_PRIVATE)
+    private val gson = Gson()
 
-    override suspend fun addAll(notes: List<WrongAnswerNote>) = withContext(Dispatchers.IO) {
-        if (notes.isNotEmpty()) dao.insertAll(notes.map { it.toEntity() })
+    override suspend fun saveWrongAnswer(wrongAnswer: WrongAnswer) = withContext(Dispatchers.IO) {
+        val currentList = getWrongAnswers().toMutableList()
+        currentList.add(wrongAnswer)
+
+        val json = gson.toJson(currentList)
+        sharedPrefs.edit {putString("wrong_answers_list", json)}
     }
 
-    override suspend fun clear() = withContext(Dispatchers.IO) {
-        dao.clear()
+    override suspend fun getWrongAnswers(): List<WrongAnswer> = withContext(Dispatchers.IO) {
+        val json = sharedPrefs.getString("wrong_answers_list", null)
+        if (json != null) {
+            val type = object : TypeToken<List<WrongAnswer>>() {}.type
+            gson.fromJson(json, type)
+        } else {
+            emptyList()
+        }
+    }
+
+    override suspend fun clearWrongAnswers() = withContext(Dispatchers.IO) {
+        sharedPrefs.edit { remove("wrong_answers_list") }
     }
 }

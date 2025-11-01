@@ -29,7 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.largeblueberry.bitquest.feature_quiz.ui.components.ChoicesBlock
+import com.largeblueberry.bitquest.feature_quiz.ui.components.ErrorScreen
 import com.largeblueberry.bitquest.feature_quiz.ui.components.ExplanationBlock
+import com.largeblueberry.bitquest.feature_quiz.ui.components.LoadingScreen
 import com.largeblueberry.bitquest.feature_quiz.ui.components.ProblemBlock
 import com.largeblueberry.bitquest.feature_quiz.ui.components.ResultBlock
 import com.largeblueberry.bitquest.feature_quiz.ui.model.QuizContentState
@@ -44,7 +46,6 @@ fun QuizDetailScreen(
 ) {
     // 1. ViewModel의 상태를 구독합니다.
     val screenState by viewModel.uiState.collectAsState()
-
 
     Scaffold(
         topBar = {
@@ -129,7 +130,7 @@ private fun QuizSuccessContent(
                             quiz = currentQuiz,
                             viewModel = viewModel,
                             selectedAnswer = contentState.selectedAnswer,
-                            showResult = contentState.showResult
+                            showResult = false
                         )
                     }
                 }
@@ -170,48 +171,4 @@ private fun QuizSuccessContent(
             }
         }
     }
-}
-
-@Composable
-private fun QuizEndScreen(
-    onNavigateHome: () -> Unit,
-    onRestartQuiz: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = "모든 퀴즈를 완료했습니다!", style = MaterialTheme.typography.headlineSmall )
-        Spacer(modifier = Modifier.height(24.dp))
-        Button(onClick = onNavigateHome, modifier = Modifier.fillMaxWidth()) {
-            Text("홈으로 돌아가기")
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedButton(onClick = onRestartQuiz, modifier = Modifier.fillMaxWidth()) {
-            Text("다시 풀기")
-        }
-    }
-}
-
-
-
-@Composable
-private fun LoadingScreen() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        CircularProgressIndicator()
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "퀴즈를 불러오는 중...")
-    }
-}
-
-@Composable
-private fun ErrorScreen(message: String) {
-    Text(text = "오류가 발생했습니다: $message", color = MaterialTheme.colorScheme.error)
 }

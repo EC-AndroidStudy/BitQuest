@@ -69,8 +69,19 @@ fun AppNavGraph(
         }
 
         composable(Screen.ReviewNotes.route) {
-            WrongNoteScreen()
+            WrongNoteScreen(
+                navController = navController,
+                onItemClick = { wrongAnswer ->
+                    // 오답 상세보기나 다른 액션
+                },
+                onRetryClick = {
+                    // 분야 선택 화면으로 이동 (퀴즈 시작을 위해)
+                    navController.navigate(Screen.FieldSelection.route)
+                }
+            )
         }
+
+
 
         // 분석 화면 추가
         composable(
