@@ -106,7 +106,7 @@ private fun HeaderSection(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.heartbutton), // hearbuttn.png
+                painter = painterResource(id = R.drawable.heartbutton), // hearbutton.png
                 contentDescription = "하트",
                 modifier = Modifier.size(24.dp)
             )
@@ -232,7 +232,7 @@ private fun NavigationSection(
             modifier = Modifier
                 .size(48.dp)
                 .clickable { onMainClick() }
-        )
+        )// -> 일일 과제 화면으로 개선
 
         Image(
             painter = painterResource(id = R.drawable.settingbutton), // mypagebutton.png
