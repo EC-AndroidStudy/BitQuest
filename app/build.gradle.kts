@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.largeblueberry.bitquest"
-    compileSdk = 35 // 34에서 35로 변경
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.largeblueberry.bitquest"
         minSdk = 26
-        targetSdk = 35 // 34에서 35로 변경
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -22,7 +22,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "GEMINI_API_KEY", "\"${findProperty("GEMINI_API_KEY")}\"")
+            isDebuggable = true
+        }
         release {
+            buildConfigField("String", "GEMINI_API_KEY", "\"${findProperty("GEMINI_API_KEY")}\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -41,6 +46,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true  // BuildConfig 활성화
         compose = true
     }
 
@@ -55,9 +61,12 @@ android {
     }
 }
 
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
+
+    implementation("com.google.ai.client.generativeai:generativeai:0.7.0")
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))

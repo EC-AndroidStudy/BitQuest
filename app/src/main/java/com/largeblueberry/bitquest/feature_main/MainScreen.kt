@@ -44,7 +44,7 @@ fun MainScreen(
                 navController.navigate(Screen.FieldSelection.route)
             },
             onWrongNoteClick = { navController.navigate(Screen.ReviewNotes.route) }, // 오답노트 화면으로 이동
-            onAiAnalysisClick = { viewModel.onAiAnalysis() },
+            onAiAnalysisClick = { navController.navigate(Screen.Analysis.route) },
             onMainClick = { viewModel.onNavigateToMain() },
             onMyPageClick = { viewModel.onNavigateToMyPage() }
         )
