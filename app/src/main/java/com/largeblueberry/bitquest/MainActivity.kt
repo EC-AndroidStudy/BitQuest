@@ -13,7 +13,9 @@ import com.largeblueberry.bitquest.feature_quiz.ui.QuizDetailScreen
 import com.largeblueberry.bitquest.ui.navigation.AppNavGraph
 import com.largeblueberry.bitquest.ui.navigation.Screen
 import com.largeblueberry.bitquest.ui.theme.BitQuestTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
