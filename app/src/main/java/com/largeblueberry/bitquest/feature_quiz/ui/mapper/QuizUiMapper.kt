@@ -6,60 +6,46 @@ import com.largeblueberry.bitquest.feature_quiz.domain.model.QuizType
 import com.largeblueberry.bitquest.feature_quiz.ui.model.QuizResultUiModel
 import com.largeblueberry.bitquest.feature_quiz.ui.model.QuizTypeUi
 import com.largeblueberry.bitquest.feature_quiz.ui.model.QuizUiModel
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class QuizUiMapper @Inject constructor() {
+// Domain -> UI
+fun Quiz.toUiModel(): QuizUiModel = QuizUiModel(
+    id = id,
+    title = title,
+    question = question,
+    options = options,
+    correctAnswer = correctAnswer,
+    explanation = explanation,
+    category = category,
+    type = type.toUi()
+)
 
-    fun mapToUiModel(domain: Quiz): QuizUiModel {
-        return QuizUiModel(
-            id = domain.id,
-            question = domain.question,
-            options = domain.options,
-            correctAnswer = domain.correctAnswer,
-            explanation = domain.explanation,
-            category = domain.category,
-            type = mapQuizTypeToUi(domain.type)
-        )
-    }
+// UI -> Domain
+fun QuizUiModel.toDomain(): Quiz = Quiz(
+    id = id,
+    title = title,
+    question = question,
+    options = options,
+    correctAnswer = correctAnswer,
+    explanation = explanation,
+    category = category,
+    type = type.toDomain()
+)
 
-    fun mapToDomain(uiModel: QuizUiModel): Quiz {
-        return Quiz(
-            id = uiModel.id,
-            question = uiModel.question,
-            options = uiModel.options,
-            correctAnswer = uiModel.correctAnswer,
-            explanation = uiModel.explanation,
-            category = uiModel.category,
-            type = mapQuizTypeToDomain(uiModel.type)
-        )
-    }
+fun List<Quiz>.toUiModelList(): List<QuizUiModel> = this.map { it.toUiModel() }
 
-    fun mapToUiModelList(domains: List<Quiz>): List<QuizUiModel> {
-        return domains.map { mapToUiModel(it) }
-    }
+fun QuizResult.toUiModel(): QuizResultUiModel = QuizResultUiModel(
+    quiz = quiz.toUiModel(),
+    selectedAnswer = selectedAnswer,
+    isCorrect = isCorrect,
+    timeSpent = timeSpent
+)
 
-    fun mapResultToUiModel(domainResult: QuizResult): QuizResultUiModel {
-        return QuizResultUiModel(
-            quiz = mapToUiModel(domainResult.quiz),
-            selectedAnswer = domainResult.selectedAnswer,
-            isCorrect = domainResult.isCorrect,
-            timeSpent = domainResult.timeSpent
-        )
-    }
+private fun QuizType.toUi(): QuizTypeUi = when (this) {
+    QuizType.OX -> QuizTypeUi.OX
+    QuizType.MULTIPLE_CHOICE -> QuizTypeUi.MULTIPLE_CHOICE
+}
 
-    fun mapQuizTypeToUi(domainType: QuizType): QuizTypeUi {
-        return when (domainType) {
-            QuizType.OX -> QuizTypeUi.OX
-            QuizType.MULTIPLE_CHOICE -> QuizTypeUi.MULTIPLE_CHOICE
-        }
-    }
-
-    fun mapQuizTypeToDomain(uiType: QuizTypeUi): QuizType {
-        return when (uiType) {
-            QuizTypeUi.OX -> QuizType.OX
-            QuizTypeUi.MULTIPLE_CHOICE -> QuizType.MULTIPLE_CHOICE
-        }
-    }
+private fun QuizTypeUi.toDomain(): QuizType = when (this) {
+    QuizTypeUi.OX -> QuizType.OX
+    QuizTypeUi.MULTIPLE_CHOICE -> QuizType.MULTIPLE_CHOICE
 }

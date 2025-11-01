@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.largeblueberry.bitquest.feature_quiz.data.QuizDao
 import com.largeblueberry.bitquest.feature_quiz.data.QuizDatabase
+import com.largeblueberry.bitquest.feature_quiz.data.repository.QuizRepositoryImpl
+import com.largeblueberry.bitquest.feature_quiz.domain.repository.QuizRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,9 +13,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/**
+ * 퀴즈 기능에 필요한 모든 의존성을 제공하는 단일 모듈.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
-object DatabaseModule {
+object QuizModule {
 
     @Provides
     @Singleton
@@ -22,12 +27,19 @@ object DatabaseModule {
             context,
             QuizDatabase::class.java,
             "quiz_database"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     @Provides
-    @Singleton  // 이것도 추가하는 게 좋습니다
+    @Singleton
     fun provideQuizDao(database: QuizDatabase): QuizDao {
         return database.quizDao()
+    }
+
+    // MissingBinding 오류를 해결하는 핵심적인 부분
+    @Provides
+    @Singleton
+    fun provideQuizRepository(dao: QuizDao): QuizRepository {
+        return QuizRepositoryImpl(dao)
     }
 }

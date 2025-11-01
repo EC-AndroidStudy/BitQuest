@@ -1,6 +1,7 @@
 [
   {
     "id": 1,
+    "title": "ViewModel의 책임 분리",
     "question": "ViewModel이 인증, 네트워크, 유효성 검사 로직까지 모두 처리하여 비대해졌을 때, '관심사의 분리'와 '테스트 용이성'을 위해 가장 먼저 고려해야 할 리팩토링 접근법은 무엇인가?",
     "options": [
       "1) ViewModel을 기능별로 여러 개의 작은 ViewModel로 분리한다.",
@@ -15,6 +16,7 @@
   },
   {
     "id": 2,
+    "title": "AndroidViewModel의 한계",
     "question": "'AndroidViewModel'을 상속받아 'Context'를 사용하는 것은, 단위 테스트(Unit Test) 시 'Context'를 Mocking해야 하는 복잡성을 야기하므로 권장되지 않는다.",
     "options": [
       "O",
@@ -27,6 +29,7 @@
   },
   {
     "id": 3,
+    "title": "Hilt와 ApplicationContext",
     "question": "'GoogleSignManager'처럼 'ApplicationContext'가 필요하고 앱 전역에서 싱글톤으로 관리되어야 하는 객체가 있을 때, Hilt로 처리하는 가장 올바른 방법은 무엇인가?",
     "options": [
       "1) '@Binds'를 사용하여 'ActivityContext'를 직접 주입한다",
@@ -41,6 +44,7 @@
   },
   {
     "id": 4,
+    "title": "Room DAO의 동작 원리",
     "question": "'Room'의 'DAO'는 인터페이스임에도 불구하고 Repository에 주입될 수 있는데, 이는 Hilt가 런타임에 리플렉션으로 구현체를 생성하기 때문이다.",
     "options": [
       "O",
@@ -53,6 +57,7 @@
   },
   {
     "id": 5,
+    "title": "계층(Layer)과 Mapper의 역할",
     "question": "'Data Layer'의 'Retrofit Entity'나 'Room Entity'를 'Domain Layer'나 'ViewModel'에서 직접 사용하지 않고 'Mapper'를 두는 가장 실전적인 이유는 무엇인가?",
     "options": [
       "1) 'Entity'의 파일 크기를 줄이기 위해서이다",
@@ -67,6 +72,7 @@
   },
   {
     "id": 6,
+    "title": "안정적인 Git 브랜치 전략",
     "question": "여러 모듈에 걸친 대규모 아키텍처 리팩토링을 진행할 때, 병합 충돌(Merge Conflict)의 위험을 최소화하기 위한 가장 실용적인 Git 브랜치 전략은 무엇인가?",
     "options": [
       "1) 'main' 브랜치에서 직접 모든 파일을 수정하고, 작업이 끝나면 한 번에 커밋한다",
@@ -76,11 +82,12 @@
     ],
     "correctAnswer": 2,
     "explanation": "모든 변경 사항을 하나의 브랜치에 쌓아두고 마지막에 한 번에 병합하려 하면, 충돌이 발생할 가능성이 매우 높고 해결하기 어렵습니다. 작업을 논리적 단위(예: 모듈)로 나누고, 완료될 때마다 점진적으로 병합하는 것이 충돌을 최소화하는 안정적인 전략입니다.",
-    "category": "Android",
+    "category": "Git",
     "type": "MULTIPLE_CHOICE"
   },
   {
     "id": 7,
+    "title": "보안 키 노출 시 대응 방법",
     "question": "'.gitignore'에 추가되지 않은 'google-service.json' 파일이 public 저장소에 PUSH되었다면, 가장 먼저 할 일은 저장소를 'private'으로 전환하는 것이다.",
     "options": [
       "O",
@@ -88,11 +95,12 @@
     ],
     "correctAnswer": 2,
     "explanation": "키가 이미 노출되었다면, 저장소를 비공개로 전환하는 것만으로는 충분하지 않습니다. 가장 먼저 노출된 키를 Firebase/Google Cloud 콘솔에서 즉시 폐기(Revoke)하여 악용을 막아야 합니다. 그 후에 Git 기록에서 해당 파일을 완전히 제거하는 작업을 진행해야 합니다.",
-    "category": "Android",
+    "category": "Git",
     "type": "OX"
   },
   {
     "id": 8,
+    "title": "UiState의 장점",
     "question": "Composable 함수가 ViewModel로부터 여러 개의 개별 상태(예: 'isLoading', 'dataList', 'errorMsg')를 전달받는 것보다, 이를 'UiState'라는 단일 'data class'로 묶어 전달하는 것이 가독성과 유지보수성 측면에서 더 권장된다.",
     "options": [
       "O",
@@ -105,6 +113,7 @@
   },
   {
     "id": 9,
+    "title": "MVI와 단방향 데이터 흐름",
     "question": "'UiState' data class를 사용하는 MVVM 패턴에서, 'MVI' 패턴의 'Intent'를 도입하려는 궁극적인 목적은 무엇인가?",
     "options": [
       "1) 'Room Database'와의 연결을 더 쉽게 하기 위해서이다",
@@ -119,6 +128,7 @@
   },
   {
     "id": 10,
+    "title": "Room과 Flow (리액티브 구독)",
     "question": "'viewModelScope.launch'를 사용하여 'suspend' 함수를 호출하는 것만으로도, 'Room' DB의 변경 사항을 실시간으로 구독하는 리액티브(reactive)한 데이터 처리가 가능하다.",
     "options": [
       "O",
@@ -131,6 +141,7 @@
   },
   {
     "id": 11,
+    "title": "멀티모듈과 의존성 주입",
     "question": "'feature_quiz'와 'feature_wrongAnswer' 모듈이 모두 'QuizDatabase'를 필요로 할 때, 가장 올바른 Hilt 모듈 구성 방법은 무엇인가?",
     "options": [
       "1) 'feature_quiz'의 'DatabaseModule'을 'feature_wrongAnswer'가 'implementation'한다",
@@ -145,6 +156,7 @@
   },
   {
     "id": 12,
+    "title": "Gradle 모듈 경로 규칙",
     "question": "Gradle 멀티 모듈 프로젝트에서 'feature' 디렉토리 아래 'library' 모듈을 추가할 때, 'settings.gradle.kts'에 'include(\"feature.library\")'라고 작성해야 한다.",
     "options": [
       "O",
@@ -157,6 +169,7 @@
   },
   {
     "id": 13,
+    "title": "ViewModelProvider의 'this' 의미",
     "question": "Hilt를 사용하기 전, 'ViewModelProvider(this, factory)'의 'this'는 생성될 'ViewModel'의 인스턴스를 의미한다.",
     "options": [
       "O",
@@ -169,6 +182,7 @@
   },
   {
     "id": 14,
+    "title": "안드로이드 의존성과 테스트",
     "question": "ViewModel의 단위 테스트(Unit Test)를 작성할 때, 'AndroidViewModel'을 상속받으면 'Context' 의존성으로 인해 순수 JVM 테스트가 불가능해지고, 'Instrumented Test'가 필요하게 된다.",
     "options": [
       "O",
@@ -181,6 +195,7 @@
   },
   {
     "id": 15,
+    "title": "invoke 연산자의 활용",
     "question": "'UseCase' 클래스에 'operator fun invoke()'를 구현하면, 해당 클래스의 인스턴스를 함수처럼 호출할 수 있어 코드가 간결해지는 실용적인 이점이 있다.",
     "options": [
       "O",
@@ -193,6 +208,7 @@
   },
   {
     "id": 16,
+    "title": "대규모 리팩토링과 병합",
     "question": "대규모 리팩토링 시, 모든 변경 사항을 하나의 'refactor' 브랜치에 쌓아두고 마지막에 한 번만 'dev' 브랜치에 병합하는 것이 충돌을 한 번에 처리할 수 있어 효율적이다.",
     "options": [
       "O",
@@ -200,11 +216,12 @@
     ],
     "correctAnswer": 2,
     "explanation": "이는 매우 위험한 전략입니다. 변경 사항이 너무 많으면 병합 충돌이 발생했을 때 해결하기가 매우 복잡하고 어려워집니다. 모듈이나 기능 단위로 작업을 나누어 점진적으로 병합하는 것이 훨씬 안전하고 효율적입니다.",
-    "category": "Android",
+    "category": "Git",
     "type": "OX"
   },
   {
     "id": 17,
+    "title": "구성 변경과 ViewModel",
     "question": "화면 회전과 같은 '구성 변경' 시 'Activity'는 파괴되고 재생성되지만 'ViewModel' 인스턴스는 유지된다. 이 과정의 핵심 원리로 올바른 것은 무엇인가?",
     "options": [
       "1) 'Hilt'의 '@Singleton' 스코프가 'ViewModel'의 재생성을 막기 때문이다.",
@@ -219,6 +236,7 @@
   },
   {
     "id": 18,
+    "title": "Composable 미리보기의 한계",
     "question": "'@Preview' 어노테이션을 사용하여 'ViewModel'을 파라미터로 받는 Composable 스크린을 미리 보려 할 때 발생하는 실전적인 문제는 무엇인가?",
     "options": [
       "1) '@Preview'가 'ViewModel'의 'Flow'를 구독할 수 없어 컴파일 에러가 발생한다",
@@ -233,6 +251,7 @@
   },
   {
     "id": 19,
+    "title": "테스트 코드의 역할과 가치",
     "question": "매번 앱을 빌드/실행하여 기능을 확인하는 대신 테스트 코드를 작성할 때 얻는 가장 큰 실전적 가치는 무엇인가?",
     "options": [
       "1) 앱의 빌드 속도를 단축시킬 수 있다",
@@ -247,6 +266,7 @@
   },
   {
     "id": 20,
+    "title": "클린 아키텍처와 SoC 원칙",
     "question": "클린 아키텍처로 리팩토링하기 전, 'ViewModel'이 'Retrofit' 객체와 'Room'의 'DAO'에 직접 접근하는 것은 '관심사의 분리(SoC)' 원칙에 위배되는가?",
     "options": [
       "1) 위배된다",

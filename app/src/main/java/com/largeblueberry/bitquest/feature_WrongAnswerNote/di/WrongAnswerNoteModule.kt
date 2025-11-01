@@ -17,17 +17,20 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object WrongAnswerNoteModule {
 
-    @Provides @Singleton
-    fun provideDb(@ApplicationContext ctx: Context): WrongAnswerDatabase =
-        Room.databaseBuilder(
+    @Provides
+    @Singleton
+    fun provideDb(@ApplicationContext ctx: Context): WrongAnswerDatabase {
+        return Room.databaseBuilder(
             ctx,
             WrongAnswerDatabase::class.java,
             "bitquest_wrongnote.db"
         ).fallbackToDestructiveMigration().build()
+    }
 
     @Provides
     fun provideDao(db: WrongAnswerDatabase): WrongAnswerDao = db.wrongAnswerDao()
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideRepository(impl: WrongAnswerRepositoryImpl): WrongAnswerRepository = impl
 }

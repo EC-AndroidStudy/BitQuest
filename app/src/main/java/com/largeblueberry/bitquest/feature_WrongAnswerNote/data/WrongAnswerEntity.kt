@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class WrongAnswerEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val questionId: Int,
+    val title: String, // 이 줄을 다시 추가합니다.
     val questionText: String,
     val selectedAnswer: String,
     val correctAnswer: String,

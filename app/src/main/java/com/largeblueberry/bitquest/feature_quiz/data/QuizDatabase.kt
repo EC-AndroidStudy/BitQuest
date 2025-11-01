@@ -4,10 +4,9 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-// QuizDatabase.kt
 @Database(
     entities = [QuizEntity::class],
-    version = 1,
+    version = 3, 
     exportSchema = false
 )
 @TypeConverters(Converters::class)

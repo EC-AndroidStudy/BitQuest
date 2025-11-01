@@ -17,6 +17,10 @@ interface QuizDao {
     @Query("SELECT * FROM quiz WHERE category = :category")
     suspend fun getQuizzesByCategory(category: String): List<QuizEntity>
 
+    // 누락되었던 함수 추가
+    @Query("SELECT * FROM quiz WHERE id IN (:ids)")
+    suspend fun getQuizzesByIds(ids: List<Int>): List<QuizEntity>
+
     @Query("SELECT * FROM quiz WHERE type = :type")
     suspend fun getQuizzesByType(type: QuizTypeEntity): List<QuizEntity>
 

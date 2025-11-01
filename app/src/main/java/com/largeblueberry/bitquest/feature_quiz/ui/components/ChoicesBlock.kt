@@ -1,8 +1,15 @@
 package com.largeblueberry.bitquest.feature_quiz.ui.components
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.largeblueberry.bitquest.feature_quiz.ui.QuizViewModel
-import com.largeblueberry.bitquest.feature_quiz.ui.model.QuizTypeUi
 import com.largeblueberry.bitquest.feature_quiz.ui.model.QuizUiModel
 
 @Composable
@@ -12,27 +19,18 @@ fun ChoicesBlock(
     selectedAnswer: Int?,
     showResult: Boolean
 ) {
-    when (quiz.type) {
-        QuizTypeUi.MULTIPLE_CHOICE -> {
-            MultipleChoiceButtons(
-                choices = quiz.options,
-                selectedAnswer = selectedAnswer,
-                correctAnswer = if (showResult) quiz.correctAnswer else null,
-                onAnswerSelected = { index ->
-                    viewModel.selectAnswer(index)
-                },
+    Column {
+        quiz.options.forEachIndexed { index, option ->
+            Button(
+                onClick = { viewModel.selectAnswer(index) }, // 인덱스를 전달
+                modifier = Modifier.fillMaxWidth(),
                 enabled = !showResult
-            )
-        }
-        QuizTypeUi.OX -> {
-            OxButtons(
-                selectedAnswer = selectedAnswer,
-                correctAnswer = if (showResult) quiz.correctAnswer else null,
-                onAnswerSelected = { answer ->
-                    viewModel.selectAnswer(if (answer) 0 else 1)
-                },
-                enabled = !showResult
-            )
+            ) {
+                Text(text = option)
+            }
+            if (index < quiz.options.size - 1) {
+                Spacer(modifier = Modifier.height(8.dp))
+            }
         }
     }
 }

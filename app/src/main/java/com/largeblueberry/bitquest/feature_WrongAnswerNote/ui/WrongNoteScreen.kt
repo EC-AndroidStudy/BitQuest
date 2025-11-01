@@ -13,28 +13,33 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.largeblueberry.bitquest.feature_WrongAnswerNote.domain.model.WrongAnswerNote
 import com.largeblueberry.bitquest.feature_main.util.BitQuestColors
+import com.largeblueberry.bitquest.ui.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WrongNoteScreen(
+    navController: NavController,
     viewModel: WrongNoteViewModel = hiltViewModel(),
-    onItemClick: (WrongAnswerNote) -> Unit = {},
-    onRetryClick: () -> Unit = {}
+    onItemClick: (WrongAnswerNote) -> Unit = {}
 ) {
     val notes by viewModel.notes.collectAsState()
 
     Scaffold(
-        containerColor = BitQuestColors.White, // 전체 배경을 흰색으로 설정
+        containerColor = BitQuestColors.White,
         topBar = {
             TopAppBar(
-                title = { Text("오답 노트", color = Color.White) }, // 타이틀 색상을 흰색으로
+                title = { Text("오답 노트", color = Color.White) },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = BitQuestColors.PrimaryGreen, // 상단바 배경을 메인 초록색으로
+                    containerColor = BitQuestColors.PrimaryGreen,
                     titleContentColor = Color.White
                 )
             )
@@ -44,7 +49,7 @@ fun WrongNoteScreen(
             modifier = Modifier.padding(inner),
             notes = notes,
             onItemClick = onItemClick,
-            onRetryClick = onRetryClick
+            onRetryClick = { navController.navigate(Screen.FieldSelection.route) }
         )
     }
 }
@@ -65,7 +70,7 @@ private fun WrongNoteContent(
                 Icon(
                     imageVector = Icons.Outlined.LibraryBooks,
                     contentDescription = null,
-                    tint = BitQuestColors.PrimaryGreen, // 아이콘 색상을 메인 초록색으로
+                    tint = BitQuestColors.PrimaryGreen,
                     modifier = Modifier.size(64.dp)
                 )
                 Spacer(Modifier.height(12.dp))
@@ -74,7 +79,7 @@ private fun WrongNoteContent(
                 Text("퀴즈를 풀고 틀린 문제를 여기서 복습하세요", style = MaterialTheme.typography.bodyMedium, color = BitQuestColors.TextLight)
                 Spacer(Modifier.height(16.dp))
                 Button(
-                    onClick = onRetryClick, 
+                    onClick = onRetryClick,
                     colors = ButtonDefaults.buttonColors(containerColor = BitQuestColors.PrimaryGreen)
                 ) {
                     Text("퀴즈 시작", color = Color.White)
@@ -83,23 +88,59 @@ private fun WrongNoteContent(
         }
     } else {
         LazyColumn(
-            modifier = modifier.fillMaxSize()
+            modifier = modifier.fillMaxSize(),
+            contentPadding = PaddingValues(vertical = 8.dp)
         ) {
-            items(notes) { n ->
-                ListItem(
-                    headlineContent = { Text(n.questionText.ifBlank { "(no text)" }, color = BitQuestColors.TextDark) }, // 폰트 색상을 검은색으로
-                    supportingContent = {
-                        Text("Your: ${n.selectedAnswer}  |  Correct: ${n.correctAnswer}", color = BitQuestColors.TextLight) // 폰트 색상을 회색으로
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onItemClick(n) }
-                )
-                Divider(color = BitQuestColors.BackgroundGray) // 구분선 색상 변경
+            items(notes) { note ->
+                WrongNoteItem(note = note, onClick = { onItemClick(note) })
+                Divider(color = BitQuestColors.BackgroundGray, thickness = 1.dp)
             }
         }
     }
 }
+
+@Composable
+private fun WrongNoteItem(note: WrongAnswerNote, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 20.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        // 제목 (12자 이상이면 ... 처리)
+        Text(
+            text = note.title,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = BitQuestColors.TextDark,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f, fill = false)
+        )
+
+        // 카테고리 아이콘 및 텍스트
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = when (note.category) {
+                    "Android" -> "📱"
+                    "Git" -> "🌿"
+                    else -> "📖"
+                },
+                fontSize = 21.sp, // 1pt 키움
+                modifier = Modifier.padding(start = 16.dp, end = 8.dp)
+            )
+            Text(
+                text = note.category,
+                fontSize = 17.sp, // 1pt 키움
+                fontWeight = FontWeight.Medium,
+                color = BitQuestColors.TextLight
+            )
+        }
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
