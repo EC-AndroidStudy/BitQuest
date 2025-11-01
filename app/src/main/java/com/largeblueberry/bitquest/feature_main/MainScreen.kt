@@ -38,18 +38,17 @@ fun MainScreen(
         BitQuestContent(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding), // 시스템 UI 영역만 피하기
+                .padding(innerPadding),
             cardData = uiState.cardData,
             onSolveClick = {
-                // 테마 선택 화면으로 이동하도록 수정
                 navController.navigate(Screen.FieldSelection.route)
             },
+            onWrongNoteClick = { navController.navigate(Screen.ReviewNotes.route) }, // 오답노트 화면으로 이동
             onAiAnalysisClick = { viewModel.onAiAnalysis() },
             onMainClick = { viewModel.onNavigateToMain() },
             onMyPageClick = { viewModel.onNavigateToMyPage() }
         )
     }
-
 }
 
 @Composable
@@ -57,28 +56,27 @@ fun BitQuestContent(
     modifier: Modifier = Modifier,
     cardData: BitQuestCardData,
     onSolveClick: () -> Unit = {},
+    onWrongNoteClick: () -> Unit = {},
     onAiAnalysisClick: () -> Unit = {},
     onMainClick: () -> Unit = {},
     onMyPageClick: () -> Unit = {}
 ) {
     Column(modifier = modifier.fillMaxSize()) {
-        // 상단 헤더
         HeaderSection(
             tier = cardData.tier,
             description = cardData.description,
             heartCount = cardData.heartCount
         )
 
-        // 메인 콘텐츠
         MainContentSection(
             modifier = Modifier.weight(1f),
             title = cardData.title,
             score = cardData.score,
             accuracy = cardData.accuracy,
-            onSolveClick = onSolveClick
+            onSolveClick = onSolveClick,
+            onWrongNoteClick = onWrongNoteClick // 추가
         )
 
-        // 하단 네비게이션
         NavigationSection(
             onAiAnalysisClick = onAiAnalysisClick,
             onMainClick = onMainClick,
@@ -102,19 +100,18 @@ private fun HeaderSection(
     ) {
         HeaderItem(text = tier, weight = 1f)
         HeaderItem(text = description, weight = 2f)
-        // 하트 이미지와 개수
         Column(
             modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.heartbutton), // hearbutton.png
+                painter = painterResource(id = R.drawable.heartbutton),
                 contentDescription = "하트",
                 modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "5", // 하드코딩된 하트 개수 (나중에 heartCount로 변경)
+                text = "5",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
                 color = BitQuestColors.TextDark
@@ -129,7 +126,8 @@ private fun MainContentSection(
     title: String,
     score: String,
     accuracy: String,
-    onSolveClick: () -> Unit
+    onSolveClick: () -> Unit,
+    onWrongNoteClick: () -> Unit // 추가
 ) {
     Column(
         modifier = modifier
@@ -139,7 +137,6 @@ private fun MainContentSection(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // 타이틀
         Text(
             text = title,
             fontSize = 48.sp,
@@ -150,7 +147,6 @@ private fun MainContentSection(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // 점수와 정답률
         Row(
             horizontalArrangement = Arrangement.spacedBy(32.dp)
         ) {
@@ -186,10 +182,10 @@ private fun MainContentSection(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // 문제 풀러 가기 버튼
         Button(
             onClick = onSolveClick,
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(horizontal = 24.dp)
                 .height(56.dp),
             colors = ButtonDefaults.buttonColors(
@@ -199,6 +195,28 @@ private fun MainContentSection(
         ) {
             Text(
                 text = "문제 풀러 가기",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // 오답노트 보기 버튼 추가
+        Button(
+            onClick = onWrongNoteClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .height(56.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = BitQuestColors.WrongAnswerRed // 보색 계열
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text(
+                text = "오답노트 보기",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.White
@@ -216,30 +234,29 @@ private fun NavigationSection(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(BitQuestColors.White) // 흰색 배경으로 변경
+            .background(BitQuestColors.White)
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = painterResource(id = R.drawable.aibutton), // aibutton.png
+            painter = painterResource(id = R.drawable.aibutton),
             contentDescription = "AI 오답 분석",
             modifier = Modifier
                 .size(48.dp)
                 .clickable { onAiAnalysisClick() }
         )
 
-        // 홈 버튼 (메인)
         Image(
-            painter = painterResource(id = R.drawable.homebutton), // homebutton.png
+            painter = painterResource(id = R.drawable.homebutton),
             contentDescription = "메인",
             modifier = Modifier
                 .size(48.dp)
                 .clickable { onMainClick() }
-        )// -> 일일 과제 화면으로 개선
+        )
 
         Image(
-            painter = painterResource(id = R.drawable.settingbutton), // mypagebutton.png
+            painter = painterResource(id = R.drawable.settingbutton),
             contentDescription = "마이페이지",
             modifier = Modifier
                 .size(48.dp)

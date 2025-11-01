@@ -15,6 +15,7 @@ import androidx.navigation.navArgument
 import com.largeblueberry.bitquest.feature_FieldSelection.FieldSelectionScreen
 import com.largeblueberry.bitquest.feature_main.MainScreen
 import com.largeblueberry.bitquest.feature_quiz.ui.QuizDetailScreen
+import com.largeblueberry.bitquest.feature_WrongAnswerNote.ui.WrongNoteScreen
 
 
 @Composable
@@ -64,6 +65,10 @@ fun AppNavGraph(
 
         composable(Screen.FieldSelection.route) {
             FieldSelectionScreen(navController = navController)
+        }
+
+        composable(Screen.ReviewNotes.route) {
+            WrongNoteScreen()
         }
     }
 }

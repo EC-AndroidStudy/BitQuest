@@ -10,4 +10,5 @@ object BitQuestColors {
     val TextDark = Color(0xFF2C3E50)          // 진한 텍스트 (유지)
     val TextLight = Color(0xFF7F8C8D)         // 밝은 텍스트 (유지)
     val White = Color.White                   // 흰색 (유지)
+    val WrongAnswerRed = Color(0xFFF44336)    // 오답/에러를 위한 빨간색
 }
