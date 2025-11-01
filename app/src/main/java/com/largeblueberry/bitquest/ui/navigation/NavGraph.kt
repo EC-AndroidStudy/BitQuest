@@ -16,6 +16,7 @@ import com.largeblueberry.bitquest.feature_FieldSelection.FieldSelectionScreen
 import com.largeblueberry.bitquest.feature_main.MainScreen
 import com.largeblueberry.bitquest.feature_quiz.ui.QuizDetailScreen
 import com.largeblueberry.bitquest.feature_WrongAnswerNote.ui.WrongNoteScreen
+import com.largeblueberry.bitquest.feature_gemini.ui.AnalysisScreen
 
 
 @Composable
@@ -70,5 +71,23 @@ fun AppNavGraph(
         composable(Screen.ReviewNotes.route) {
             WrongNoteScreen()
         }
+
+        // 분석 화면 추가
+        composable(
+            route = Screen.Analysis.route,
+            enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(350)) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = tween(350)) },
+            popEnterTransition = { slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(350)) },
+            popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(350)) }
+        ) {
+            // 여기서 wrongAnswers를 어떻게 가져올지 결정해야 합니다
+            // 옵션 1: ViewModel에서 데이터를 가져오는 경우
+            AnalysisScreen(
+                wrongAnswers = emptyList() // 임시로 빈 리스트, 실제로는 ViewModel에서 가져와야 함
+            )
+
+            // 옵션 2: 데이터베이스나 Repository에서 직접 가져오는 경우는 아래 참조
+        }
     }
+
 }

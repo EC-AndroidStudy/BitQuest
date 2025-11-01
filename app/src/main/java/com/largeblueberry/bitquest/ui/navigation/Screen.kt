@@ -14,4 +14,5 @@ sealed class Screen(val route: String) {
     }
     object FieldSelection : Screen("field_selection")
     object ReviewNotes : Screen("reviewNotes")
+    object Analysis : Screen("analysis")
 }
