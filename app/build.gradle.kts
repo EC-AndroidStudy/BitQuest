@@ -11,7 +11,10 @@ plugins {
 android {
     namespace = "com.largeblueberry.bitquest"
     compileSdk = 34 // 36에서 34로 변경
+<<<<<<< HEAD
 
+=======
+>>>>>>> dev
     defaultConfig {
         applicationId = "com.largeblueberry.bitquest"
         minSdk = 26
@@ -23,7 +26,6 @@ android {
             useSupportLibrary = true
         }
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -46,11 +48,17 @@ android {
     buildFeatures {
         compose = true
     }
+<<<<<<< HEAD
 
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.4" // 추가
     }
 
+=======
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.4" // 추가
+    }
+>>>>>>> dev
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -86,4 +94,8 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> dev
