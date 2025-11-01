@@ -38,11 +38,27 @@ import com.largeblueberry.bitquest.feature_quiz.ui.model.QuizScreenState
 fun QuizDetailScreen(
     navController: NavController,
     category: String? = null,
+    quizType: String? = null,  // 추가 파라미터
+    ids: String? = null,       // 추가 파라미터
     viewModel: QuizViewModel = hiltViewModel()
 ) {
     // 1. ViewModel의 상태를 구독합니다.
     val screenState by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(category, quizType, ids) {
+        when {
+            !category.isNullOrEmpty() -> {
+                viewModel.loadQuizzes("CATEGORY", category)
+            }
+            !quizType.isNullOrEmpty() && !ids.isNullOrEmpty() -> {
+                viewModel.loadQuizzes(quizType, ids)
+            }
+            else -> {
+                // 기본값 또는 에러 처리
+                viewModel.loadQuizzes("CATEGORY", "ANDROID")
+            }
+        }
+    }
 
     Scaffold(
         topBar = {

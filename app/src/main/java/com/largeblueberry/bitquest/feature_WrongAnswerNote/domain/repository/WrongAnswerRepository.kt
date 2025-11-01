@@ -4,7 +4,9 @@ import com.largeblueberry.bitquest.feature_WrongAnswerNote.domain.model.WrongAns
 import kotlinx.coroutines.flow.Flow
 
 interface WrongAnswerRepository {
-    fun observeAll(): Flow<List<WrongAnswerNote>>
-    suspend fun addAll(notes: List<WrongAnswerNote>)
-    suspend fun clear()
+    suspend fun insertWrongAnswer(wrongAnswer: WrongAnswerNote)
+    suspend fun deleteWrongAnswer(id: Int)
+    suspend fun getAllWrongAnswers(): Flow<List<WrongAnswerNote>>
+    suspend fun getWrongAnswersByCategory(category: String): Flow<List<WrongAnswerNote>>
+    suspend fun getWrongAnswerById(id: Int): WrongAnswerNote?
 }

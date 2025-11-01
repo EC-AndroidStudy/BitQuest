@@ -1,7 +1,7 @@
 package com.largeblueberry.bitquest.feature_quiz.domain.usecase
 
-import com.largeblueberry.bitquest.feature_quiz.domain.QuizRepository
 import com.largeblueberry.bitquest.feature_quiz.domain.model.Quiz
+import com.largeblueberry.bitquest.feature_quiz.domain.repository.QuizRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

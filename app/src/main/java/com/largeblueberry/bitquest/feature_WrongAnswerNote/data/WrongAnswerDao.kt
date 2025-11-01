@@ -9,11 +9,17 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WrongAnswerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(items: List<WrongAnswerEntity>)
+    suspend fun insertWrongAnswer(wrongAnswer: WrongAnswerEntity)
+
+    @Query("DELETE FROM wrong_answers WHERE id = :id")
+    suspend fun deleteWrongAnswerById(id: Int)
 
     @Query("SELECT * FROM wrong_answers ORDER BY createdAt DESC")
-    fun observeAll(): Flow<List<WrongAnswerEntity>>
+    fun getAllWrongAnswers(): Flow<List<WrongAnswerEntity>>
 
-    @Query("DELETE FROM wrong_answers")
-    suspend fun clear()
+    @Query("SELECT * FROM wrong_answers WHERE category = :category ORDER BY createdAt DESC")
+    fun getWrongAnswersByCategory(category: String): Flow<List<WrongAnswerEntity>>
+
+    @Query("SELECT * FROM wrong_answers WHERE id = :id")
+    suspend fun getWrongAnswerById(id: Int): WrongAnswerEntity?
 }

@@ -87,6 +87,7 @@ class QuizViewModel @Inject constructor(
         }
     }
 
+
     fun previousQuiz() {
         val currentState = _uiState.value
         if (currentState is QuizScreenState.Success) {

@@ -15,19 +15,27 @@ class WrongAnswerRepositoryImpl @Inject constructor(
     private val dao: WrongAnswerDao
 ) : WrongAnswerRepository {
 
-    override fun observeAll(): Flow<List<WrongAnswerNote>> {
-        return dao.observeAll().map { entities ->
-            entities.map { it.toDomain() } // 확장 함수 사용
+    override suspend fun insertWrongAnswer(wrongAnswer: WrongAnswerNote) {
+        dao.insertWrongAnswer(wrongAnswer.toEntity())
+    }
+
+    override suspend fun deleteWrongAnswer(id: Int) {
+        dao.deleteWrongAnswerById(id)
+    }
+
+    override suspend fun getAllWrongAnswers(): Flow<List<WrongAnswerNote>> {
+        return dao.getAllWrongAnswers().map { entities ->
+            entities.map { it.toDomain() }
         }
     }
 
-    override suspend fun addAll(notes: List<WrongAnswerNote>) {
-        if (notes.isNotEmpty()) {
-            dao.insertAll(notes.map { it.toEntity() }) // 확장 함수 사용
+    override suspend fun getWrongAnswersByCategory(category: String): Flow<List<WrongAnswerNote>> {
+        return dao.getWrongAnswersByCategory(category).map { entities ->
+            entities.map { it.toDomain() }
         }
     }
 
-    override suspend fun clear() {
-        dao.clear()
+    override suspend fun getWrongAnswerById(id: Int): WrongAnswerNote? {
+        return dao.getWrongAnswerById(id)?.toDomain()
     }
 }

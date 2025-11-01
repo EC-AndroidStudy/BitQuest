@@ -22,7 +22,7 @@ interface QuizDao {
     suspend fun getQuizzesByIds(ids: List<Int>): List<QuizEntity>
 
     @Query("SELECT * FROM quiz WHERE type = :type")
-    suspend fun getQuizzesByType(type: QuizTypeEntity): List<QuizEntity>
+    suspend fun getQuizzesByType(type: String): List<QuizEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertQuiz(quiz: QuizEntity)
