@@ -42,7 +42,7 @@ fun MainScreen(
             cardData = uiState.cardData,
             onSolveClick = {
                 // 테마 선택 화면으로 이동하도록 수정
-                navController.navigate(Screen.ThemeSelection.route)
+                navController.navigate(Screen.FieldSelection.route)
             },
             onAiAnalysisClick = { viewModel.onAiAnalysis() },
             onMainClick = { viewModel.onNavigateToMain() },

@@ -1,4 +1,4 @@
-package com.largeblueberry.bitquest.feature_ThemeSelection
+package com.largeblueberry.bitquest.feature_FieldSelection
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,20 +21,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.largeblueberry.bitquest.feature_FieldSelection.domain.Field
+import androidx.core.graphics.toColorInt
 
 @Composable
-fun ThemeCard(
-    theme: ThemeItem,
+fun FieldCard(
+    field: Field,
     onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(160.dp) // aspectRatio 대신 고정 높이 사용
-            .clickable(enabled = !theme.isLocked) { onClick() },
+            .height(160.dp)
+            .clickable { onClick() }, // enabled 조건 제거
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (theme.isLocked) Color.Gray.copy(alpha = 0.3f) else theme.backgroundColor
+            containerColor = field.colorHex.toColor()// 조건문 제거
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
@@ -49,7 +51,7 @@ fun ThemeCard(
             ) {
                 // 아이콘 대신 이모지 사용
                 Text(
-                    text = when(theme.id) {
+                    text = when(field.id) {
                         1 -> "💻"
                         2 -> "📚"
                         3 -> "🧮"
@@ -65,10 +67,10 @@ fun ThemeCard(
 
                 // 제목
                 Text(
-                    text = theme.title,
+                    text = field.title,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = if (theme.isLocked) Color.Gray else Color.White,
+                    color = Color.White, // 조건문 제거
                     textAlign = TextAlign.Center
                 )
 
@@ -76,24 +78,24 @@ fun ThemeCard(
 
                 // 설명
                 Text(
-                    text = theme.description,
+                    text = field.description,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Medium,
-                    color = if (theme.isLocked) Color.Gray else Color.White.copy(alpha = 0.8f),
+                    color = Color.White.copy(alpha = 0.8f), // 조건문 제거
                     textAlign = TextAlign.Center
                 )
             }
 
-            // 잠금 아이콘
-            if (theme.isLocked) {
-                Text(
-                    text = "🔒",
-                    fontSize = 16.sp,
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(8.dp)
-                )
-            }
+            // 잠금 아이콘 부분 완전 제거
         }
+    }
+}
+
+// Color 변환 확장 함수
+private fun String.toColor(): Color {
+    return try {
+        Color(this.toColorInt())
+    } catch (e: Exception) {
+        Color.Gray // 기본값
     }
 }

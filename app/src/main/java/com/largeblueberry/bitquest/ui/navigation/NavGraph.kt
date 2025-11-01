@@ -12,7 +12,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.largeblueberry.bitquest.feature_ThemeSelection.ThemeSelectionScreen
+import com.largeblueberry.bitquest.feature_FieldSelection.FieldSelectionScreen
 import com.largeblueberry.bitquest.feature_main.MainScreen
 import com.largeblueberry.bitquest.feature_quiz.ui.QuizDetailScreen
 
@@ -46,14 +46,14 @@ fun AppNavGraph(
             popEnterTransition = { slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(350)) },
             popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(350)) }
         ) { backStackEntry ->
-            val quizId = backStackEntry.arguments?.getInt(NavArgumentKeys.QUIZ_ID) ?: ""
+            val quizId = backStackEntry.arguments?.getInt(NavArgumentKeys.QUIZ_ID) ?: 0
             QuizDetailScreen(
                 navController = navController,
             )
         }
 
-        composable(Screen.ThemeSelection.route) {
-            ThemeSelectionScreen(navController = navController)
+        composable(Screen.FieldSelection.route) {
+            FieldSelectionScreen(navController = navController)
         }
     }
 }
