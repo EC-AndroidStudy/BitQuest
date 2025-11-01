@@ -16,36 +16,44 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.largeblueberry.bitquest.feature_main.util.BitQuestColors
 import com.largeblueberry.bitquest.feature_main.util.HeaderItem
-import com.largeblueberry.bitquest.feature_main.util.InfoText
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.largeblueberry.bitquest.R
+import com.largeblueberry.bitquest.ui.navigation.NavArgumentKeys.QUIZ_ID
+import com.largeblueberry.bitquest.ui.navigation.Screen
 
 @Composable
 fun MainScreen(
+    navController: NavController,
     viewModel: MainViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(BitQuestColors.White)
-            .padding(16.dp)
-    ) {
-        BitQuestCard(
+    Scaffold(
+        containerColor = BitQuestColors.White
+    ) { innerPadding ->
+        BitQuestContent(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding), // 시스템 UI 영역만 피하기
             cardData = uiState.cardData,
-            onSolveClick = { viewModel.onSolveProblem() },
+            onSolveClick = {
+                val quizId = QUIZ_ID.toInt()
+                navController.navigate(Screen.QuizDetail.createRoute(quizId))
+            },
             onAiAnalysisClick = { viewModel.onAiAnalysis() },
             onMainClick = { viewModel.onNavigateToMain() },
             onMyPageClick = { viewModel.onNavigateToMyPage() }
         )
     }
+
 }
 
 @Composable
-fun BitQuestCard(
+fun BitQuestContent(
     modifier: Modifier = Modifier,
     cardData: BitQuestCardData,
     onSolveClick: () -> Unit = {},
@@ -53,35 +61,29 @@ fun BitQuestCard(
     onMainClick: () -> Unit = {},
     onMyPageClick: () -> Unit = {}
 ) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = BitQuestColors.White)
-    ) {
-        Column {
-            // 상단 헤더
-            HeaderSection(
-                tier = cardData.tier,
-                description = cardData.description,
-                heartCount = cardData.heartCount
-            )
+    Column(modifier = modifier.fillMaxSize()) {
+        // 상단 헤더
+        HeaderSection(
+            tier = cardData.tier,
+            description = cardData.description,
+            heartCount = cardData.heartCount
+        )
 
-            // 메인 콘텐츠
-            MainContentSection(
-                title = cardData.title,
-                score = cardData.score,
-                accuracy = cardData.accuracy,
-                onSolveClick = onSolveClick
-            )
+        // 메인 콘텐츠
+        MainContentSection(
+            modifier = Modifier.weight(1f),
+            title = cardData.title,
+            score = cardData.score,
+            accuracy = cardData.accuracy,
+            onSolveClick = onSolveClick
+        )
 
-            // 하단 네비게이션
-            NavigationSection(
-                onAiAnalysisClick = onAiAnalysisClick,
-                onMainClick = onMainClick,
-                onMyPageClick = onMyPageClick
-            )
-        }
+        // 하단 네비게이션
+        NavigationSection(
+            onAiAnalysisClick = onAiAnalysisClick,
+            onMainClick = onMainClick,
+            onMyPageClick = onMyPageClick
+        )
     }
 }
 
@@ -123,17 +125,19 @@ private fun HeaderSection(
 
 @Composable
 private fun MainContentSection(
+    modifier: Modifier = Modifier,
     title: String,
     score: String,
     accuracy: String,
     onSolveClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(BitQuestColors.BackgroundGray)
             .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         // 타이틀
         Text(
@@ -248,30 +252,6 @@ private fun NavigationSection(
 @Composable
 fun MainScreenPreview() {
     MaterialTheme {
-        MainScreen()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun BitQuestCardPreview() {
-    MaterialTheme {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(BitQuestColors.White)
-                .padding(16.dp)
-        ) {
-            BitQuestCard(
-                cardData = BitQuestCardData(
-                    tier = "골드",
-                    description = "도전적인 문제들",
-                    heartCount = "하트 5개",
-                    title = "CodeMaster",
-                    score = "점수 : 3500점",
-                    accuracy = "정답률 : 85%"
-                )
-            )
-        }
+        MainScreen(navController = rememberNavController())
     }
 }

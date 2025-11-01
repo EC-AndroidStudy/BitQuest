@@ -10,9 +10,9 @@ import javax.inject.Singleton
 @Singleton
 class QuizMapper @Inject constructor() {
 
-    fun mapToDomain(entity: QuizEntity): Quiz {
+    fun mapToDomain(entity: QuizEntity?): Quiz {
         return Quiz(
-            id = entity.id,
+            id = entity!!.id,
             question = entity.question,
             options = entity.options,
             correctAnswer = entity.correctAnswer,

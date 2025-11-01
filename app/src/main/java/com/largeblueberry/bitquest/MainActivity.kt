@@ -10,6 +10,7 @@ import com.largeblueberry.bitquest.feature_main.MainScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.largeblueberry.bitquest.feature_quiz.ui.QuizDetailScreen
+import com.largeblueberry.bitquest.ui.navigation.AppNavGraph
 import com.largeblueberry.bitquest.ui.navigation.Screen
 import com.largeblueberry.bitquest.ui.theme.BitQuestTheme
 
@@ -18,49 +19,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             BitQuestTheme {
-                // 임시로 QuizDetailScreen을 시작 화면으로 설정
-                QuizDetailScreen()
 
-                // 기존 코드 (롤백을 위해 주석 처리)
-                // BitQuestApp()
+                // 1. NavController를 앱의 최상위 수준에서 생성합니다.
+                val navController = rememberNavController()
+
+                // 2. MainScreen 대신 AppNavGraph를 진입점으로 설정합니다.
+                // 이제 AppNavGraph가 화면 전환을 모두 관리합니다.
+                AppNavGraph(navController = navController)
+
             }
         }
-    }
-}
-
-@Composable
-fun BitQuestApp() {
-    // 네비게이션 컨트롤러 생성 및 기억
-    val navController: NavHostController = rememberNavController()
-
-    // NavHost: 네비게이션 그래프를 호스팅하는 컨테이너
-    NavHost(
-        navController = navController,
-        startDestination = Screen.Main.route // 앱 시작 화면
-    ) {
-        // MainScreen 라우팅 설정
-        composable(route = Screen.Main.route) {
-            MainScreen(
-                // 클릭 이벤트가 발생하면, 선택된 테마 이름으로 QuizList 화면으로 이동
-                
-            )
-        }
-
-        // TODO: 여기에 다른 화면들(QuizListScreen, QuizDetailScreen 등)의
-        // composable() 정의를 추가해야 합니다.
-        // 예시:
-        // composable(
-        //     route = Screen.QuizList.route,
-        //     arguments = Screen.QuizList.navArguments
-        // ) { backStackEntry ->
-        //     val themeName = backStackEntry.arguments?.getString(NavArgumentKeys.THEME_NAME)
-        //     if (themeName != null) {
-        //         QuizListScreen(
-        //             themeName = themeName,
-        //             onQuizClick = { quizId -> /* 퀴즈 상세 화면으로 이동 */ },
-        //             onBackClick = { navController.popBackStack() }
-        //         )
-        //     }
-        // }
     }
 }
