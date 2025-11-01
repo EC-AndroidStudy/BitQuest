@@ -37,18 +37,28 @@ fun AppNavGraph(
             MainScreen(navController = navController)
         }
 
-        // 퀴즈 상세 화면
+        // 퀴즈 상세/목록 화면 (카테고리 기반으로 통합)
+        // 라우트: quiz_detail?category={category}
         composable(
-            route = Screen.QuizDetail.route,
-            arguments = listOf(navArgument(NavArgumentKeys.QUIZ_ID) { type = NavType.IntType }),
+            route = "${Screen.QuizDetail.route}?category={category}",
+            arguments = listOf(
+                navArgument("category") {
+                    type = NavType.StringType
+                    nullable = true // 카테고리가 없을 수도 있으므로 nullable 설정
+                }
+            ),
             enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(350)) },
             exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = tween(350)) },
             popEnterTransition = { slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(350)) },
             popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(350)) }
         ) { backStackEntry ->
-            val quizId = backStackEntry.arguments?.getInt(NavArgumentKeys.QUIZ_ID) ?: 0
+            // category를 안전하게 추출
+            val category = backStackEntry.arguments?.getString("category")
+
+            // QuizDetailScreen에서 category를 사용하여 퀴즈 목록을 로드합니다.
             QuizDetailScreen(
                 navController = navController,
+                category = category // 카테고리 전달
             )
         }
 

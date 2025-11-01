@@ -1,5 +1,6 @@
 package com.largeblueberry.bitquest.feature_quiz.data.repository
 
+import android.util.Log // Log import 추가
 import com.largeblueberry.bitquest.feature_quiz.data.QuizDao
 import com.largeblueberry.bitquest.feature_quiz.data.QuizTypeEntity
 import com.largeblueberry.bitquest.feature_quiz.data.mapper.QuizMapper
@@ -17,15 +18,29 @@ class QuizRepositoryImpl @Inject constructor(
     private val jsonLoader: QuizJsonLoader
 ) : QuizRepository {
 
+    private val TAG = "QuizRepo" // 로그 태그 정의
+
     suspend fun initializeQuizData() {
-        if (quizDao.getQuizCount() == 0) {
+        val currentCount = quizDao.getQuizCount()
+        Log.d(TAG, "1. Current DB count: $currentCount") // 👈 1. 현재 DB 상태 확인
+
+        if (currentCount == 0) {
             val quizEntities = jsonLoader.loadQuizzesFromAssets()
-            quizDao.insertQuizzes(quizEntities)
+
+            Log.d(TAG, "2. Loaded entities from JSON: ${quizEntities.size}") // 👈 2. JSON 로드 성공 여부 확인
+
+            if (quizEntities.isNotEmpty()) {
+                quizDao.insertQuizzes(quizEntities)
+                Log.d(TAG, "3. Insertion complete. New DB count: ${quizDao.getQuizCount()}") // 👈 3. 삽입 후 DB 상태 확인
+            } else {
+                Log.e(TAG, "JSON file loaded, but entities list is empty!")
+            }
         }
     }
 
     override suspend fun getAllQuizzes(): List<Quiz> {
         val entities = quizDao.getAllQuizzes()
+        Log.d(TAG, "Query: getAllQuizzes returned ${entities.size} entities.") // 👈 쿼리 결과 로그 추가
         return mapper.mapToDomainList(entities)
     }
 
@@ -36,6 +51,7 @@ class QuizRepositoryImpl @Inject constructor(
 
     override suspend fun getQuizzesByCategory(category: String): List<Quiz> {
         val entities = quizDao.getQuizzesByCategory(category)
+        Log.d(TAG, "Query: getQuizzesByCategory('$category') returned ${entities.size} entities.") // 👈 쿼리 결과 로그 추가
         return mapper.mapToDomainList(entities)
     }
 

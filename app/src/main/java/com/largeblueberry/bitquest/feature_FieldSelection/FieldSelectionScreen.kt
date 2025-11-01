@@ -31,7 +31,10 @@ fun FieldSelectionScreen(
 
     LaunchedEffect(Unit) {
         viewModel.navigationEvent.collect { fieldId ->
-            navController.navigate(Screen.QuizDetail.createRoute(fieldId))
+            when(fieldId) {
+                2 -> navController.navigate("${Screen.QuizDetail.route}?category=Android")
+                3 -> navController.navigate("${Screen.QuizDetail.route}?category=Git")
+            }
         }
     }
 

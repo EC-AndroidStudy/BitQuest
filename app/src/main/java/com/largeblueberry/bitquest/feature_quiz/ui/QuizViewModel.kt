@@ -1,5 +1,6 @@
 package com.largeblueberry.bitquest.feature_quiz.ui
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,16 +36,21 @@ class QuizViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<QuizScreenState>(QuizScreenState.Loading)
     val uiState: StateFlow<QuizScreenState> = _uiState.asStateFlow()
-    val quizId: Int? = savedStateHandle.get<Int>(NavArgumentKeys.QUIZ_ID)
+    val category: String? = savedStateHandle.get<String>("category")
 
+    // 2. ViewModel 초기화 시 퀴즈 로드 로직 추가
     init {
-        if (quizId != null) {
-            loadQuizById(quizId)
-        } else {
-
+        Log.d("QuizViewModel", "Category received: $category")
+        // category가 있다면 해당 카테고리로 로드
+        category?.let {
+            loadQuizzesByCategory(it)
+        } ?: run {
+            // category가 없다면 (예: 퀴즈 메인 화면) 전체 퀴즈를 로드하거나,
+            // 또는 에러 상태로 처리할 수 있습니다. 여기서는 전체 로드를 선택합니다.
             loadAllQuizzes()
         }
     }
+
 
     fun loadAllQuizzes() {
         loadQuizzesWith {
