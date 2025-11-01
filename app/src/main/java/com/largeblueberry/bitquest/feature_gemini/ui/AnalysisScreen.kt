@@ -1,5 +1,10 @@
 package com.largeblueberry.bitquest.feature_gemini.ui
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,6 +41,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,6 +55,8 @@ import com.largeblueberry.bitquest.feature_gemini.AnalysisResult
 import com.largeblueberry.bitquest.feature_gemini.AnalysisUiState
 import com.largeblueberry.bitquest.feature_gemini.ui.AnalysisViewModel
 import com.largeblueberry.bitquest.feature_gemini.WrongAnswer
+import kotlinx.coroutines.delay
+import androidx.compose.animation.togetherWith
 
 // 컬러 팔레트 정의
 object AnalysisColors {
@@ -132,6 +141,7 @@ fun AnalysisScreen(
     }
 }
 
+/*
 @Composable
 private fun LoadingContent() {
     Box(
@@ -152,6 +162,74 @@ private fun LoadingContent() {
                     color = AnalysisColors.TextPrimary
                 )
             )
+        }
+    }
+}
+*/
+@Composable
+private fun LoadingContent() {
+    // 1. 애니메이션 상태를 관리하기 위한 변수들
+    val (currentStep, setCurrentStep) = remember { mutableStateOf(0) }
+    val analysisSteps = listOf(
+        "오답 데이터 수집 중...",
+        "취약한 카테고리 분석 중...",
+        "패턴 및 연관 관계 파악 중...",
+        "맞춤형 학습 계획 생성 중...",
+        "최종 리포트 정리 중..."
+    )
+
+    // 2. 일정 시간마다 단계를 자동으로 변경하는 LaunchedEffect
+    LaunchedEffect(Unit) {
+        while (currentStep < analysisSteps.size - 1) {
+            delay(1500) // 1.5초마다 다음 단계로 이동
+            setCurrentStep(currentStep + 1)
+        }
+    }
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            // AI 아이콘과 프로그레스 바
+            CircularProgressIndicator(
+                color = AnalysisColors.Primary,
+                modifier = Modifier.size(60.dp),
+                strokeWidth = 4.dp
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // 3. 현재 분석 단계를 보여주는 텍스트
+            Text(
+                text = "🤖 AI가 오답을 분석중입니다",
+                style = MaterialTheme.typography.headlineSmall.copy(
+                    color = AnalysisColors.TextPrimary,
+                    fontWeight = FontWeight.Bold
+                )
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // 4. 세부 진행 상황을 애니메이션과 함께 표시
+            // AnimatedContent를 사용해 텍스트가 바뀔 때 부드러운 전환 효과를 줍니다.
+            AnimatedContent(
+                targetState = analysisSteps[currentStep],
+                transitionSpec = {
+                    // 텍스트가 아래에서 위로 나타나고, 기존 텍스트는 더 아래로 사라지는 효과
+                    slideInVertically { height -> height } + fadeIn() togetherWith
+                            slideOutVertically { height -> -height } + fadeOut()
+                }, label = "AnalysisStepAnimation"
+            ) { stepText ->
+                Text(
+                    text = stepText,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color = AnalysisColors.TextSecondary
+                    ),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }
