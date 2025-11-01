@@ -1,6 +1,7 @@
 package com.largeblueberry.bitquest.domain.repository
 
-import com.largeblueberry.bitquest.domain.model.Quiz
+import com.largeblueberry.bitquest.feature_quiz.domain.QuizModel
+
 /**
  * [작업 담당자: Android 개발자 (Repository 패턴 이해)]
  *
@@ -13,5 +14,5 @@ import com.largeblueberry.bitquest.domain.model.Quiz
  * - Flow 기반 반응형 데이터 제공
  */
 interface QuizRepository {
-    fun getQuizzes(): List<Quiz>
+    fun getQuizzes(): List<QuizModel>
 }

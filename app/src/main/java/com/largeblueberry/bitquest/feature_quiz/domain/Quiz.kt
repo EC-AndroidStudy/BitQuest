@@ -1,4 +1,4 @@
-package com.largeblueberry.bitquest.domain.model
+package com.largeblueberry.bitquest.feature_quiz.domain
 
 data class Quiz(
     val id: Int,
