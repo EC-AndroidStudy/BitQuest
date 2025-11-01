@@ -42,9 +42,7 @@ fun BitQuestApp() {
         composable(route = Screen.Main.route) {
             MainScreen(
                 // 클릭 이벤트가 발생하면, 선택된 테마 이름으로 QuizList 화면으로 이동
-                onThemeClick = { theme ->
-                    //그 테마의 퀴즈 화면 보여줌.
-                }
+                
             )
         }
 

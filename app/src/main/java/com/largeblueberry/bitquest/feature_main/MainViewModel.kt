@@ -1,14 +1,59 @@
 package com.largeblueberry.bitquest.feature_main
 
-/**
- * [작업 담당자: Android 개발자 (시니어/미드레벨)]
- *
- * TODO: 메인 홈 화면 구현
- *
- * MainViewModel.kt:
- * - 퀴즈 목록 상태 관리 (StateFlow)
- * - 검색어 처리 및 필터링 로직
- * - 퀴즈 데이터 로딩 (UseCase 호출)
- * - 에러 상태 처리
- * - 사용자 진행상황 추적
- */
+import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
+data class BitQuestCardData(
+    val tier: String,
+    val description: String,
+    val heartCount: String,
+    val title: String,
+    val score: String,
+    val accuracy: String
+)
+
+data class BitQuestUiState(
+    val cardData: BitQuestCardData = BitQuestCardData(
+        tier = "티어",
+        description = "실전 문제를 즐겁게",
+        heartCount = "하트 개수",
+        title = "BitQuest",
+        score = "점수 : 2000점",
+        accuracy = "정답률 : 90%"
+    ),
+    val isLoading: Boolean = false
+)
+
+class MainViewModel(
+
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(BitQuestUiState())
+    val uiState: StateFlow<BitQuestUiState> = _uiState.asStateFlow()
+
+    fun onSolveProblem() {
+        // 문제 풀기 로직
+        println("문제 풀러 가기 클릭")
+    }
+
+    fun onAiAnalysis() {
+        // AI 오답 분석 로직
+        println("AI 오답 분석 클릭")
+    }
+
+    fun onNavigateToMain() {
+        // 메인으로 이동 로직
+        println("메인 클릭")
+    }
+
+    fun onNavigateToMyPage() {
+        // 마이페이지 이동 로직
+        println("나 클릭")
+    }
+
+    fun updateCardData(newData: BitQuestCardData) {
+        _uiState.value = _uiState.value.copy(cardData = newData)
+    }
+}
