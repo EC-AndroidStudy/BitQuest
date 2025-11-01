@@ -3,6 +3,7 @@ package com.largeblueberry.bitquest.feature_quiz.data.repository
 import com.largeblueberry.bitquest.feature_quiz.data.QuizDao
 import com.largeblueberry.bitquest.feature_quiz.data.QuizTypeEntity
 import com.largeblueberry.bitquest.feature_quiz.data.mapper.QuizMapper
+import com.largeblueberry.bitquest.feature_quiz.data.util.QuizJsonLoader
 import com.largeblueberry.bitquest.feature_quiz.domain.QuizRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -12,8 +13,16 @@ import com.largeblueberry.bitquest.feature_quiz.domain.model.QuizType
 @Singleton
 class QuizRepositoryImpl @Inject constructor(
     private val quizDao: QuizDao,
-    private val mapper: QuizMapper
+    private val mapper: QuizMapper,
+    private val jsonLoader: QuizJsonLoader
 ) : QuizRepository {
+
+    suspend fun initializeQuizData() {
+        if (quizDao.getQuizCount() == 0) {
+            val quizEntities = jsonLoader.loadQuizzesFromAssets()
+            quizDao.insertQuizzes(quizEntities)
+        }
+    }
 
     override suspend fun getAllQuizzes(): List<Quiz> {
         val entities = quizDao.getAllQuizzes()

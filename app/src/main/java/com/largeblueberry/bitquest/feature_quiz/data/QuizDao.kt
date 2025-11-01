@@ -28,4 +28,7 @@ interface QuizDao {
 
     @Delete
     suspend fun deleteQuiz(quiz: QuizEntity)
+
+    @Query("SELECT COUNT(*) FROM quiz")
+    suspend fun getQuizCount(): Int
 }
