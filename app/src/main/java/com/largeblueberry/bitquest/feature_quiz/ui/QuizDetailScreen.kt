@@ -24,7 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.largeblueberry.bitquest.feature_quiz.ui.components.ChoicesBlock
 import com.largeblueberry.bitquest.feature_quiz.ui.components.ExplanationBlock
@@ -37,26 +37,26 @@ import com.largeblueberry.bitquest.feature_quiz.ui.model.QuizScreenState
 @Composable
 fun QuizDetailScreen(
     navController: NavController,
-    viewModel: QuizViewModel = viewModel()
+    category: String? = null,
+    viewModel: QuizViewModel = hiltViewModel()
 ) {
     // 1. ViewModel의 상태를 구독합니다.
     val screenState by viewModel.uiState.collectAsState()
 
-    val quizId = viewModel.quizId
-
-    // 2. 화면이 처음 시작될 때 또는 quizId가 변경될 때 데이터를 로드합니다.
-    LaunchedEffect(key1 = quizId) {
-        if (quizId != null && quizId > 0) {
-            viewModel.loadQuizById(quizId)
-        } else {
-            // ID가 없으면 모든 퀴즈를 불러옵니다.
-            viewModel.loadAllQuizzes()
-        }
-    }
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("BitQuest 퀴즈") })
+            TopAppBar(
+                title = {
+                    // 카테고리가 있으면 제목에 표시
+                    val title = if (!category.isNullOrEmpty()) {
+                        "$category 퀴즈"
+                    } else {
+                        "BitQuest 퀴즈"
+                    }
+                    Text(title)
+                }
+            )
         }
     ) { paddingValues ->
         // 3. 화면의 본문 영역입니다.
