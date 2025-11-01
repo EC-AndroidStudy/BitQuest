@@ -1,0 +1,262 @@
+[
+  {
+    "id": 1,
+    "question": "ViewModel이 인증, 네트워크, 유효성 검사 로직까지 모두 처리하여 비대해졌을 때, '관심사의 분리'와 '테스트 용이성'을 위해 가장 먼저 고려해야 할 리팩토링 접근법은 무엇인가?",
+    "options": [
+      "1) ViewModel을 기능별로 여러 개의 작은 ViewModel로 분리한다.",
+      "2) 모든 로직을 Repository 패턴으로만 이동시킨다.",
+      "3) Domain Layer를 도입하여 비즈니스 로직을 UseCase로 분리하고 ViewModel에 주입한다.",
+      "4) 모든 로직을 Util 또는 Helper 클래스로 분리하여 ViewModel에서 호출한다."
+    ],
+    "correctAnswer": 3,
+    "explanation": "ViewModel의 주된 책임은 UI 상태 관리입니다. 인증, 트래킹, 데이터 검증과 같은 순수 비즈니스 로직은 Domain Layer의 UseCase로 분리하여 ViewModel의 책임을 줄이고, 테스트 용이성과 코드 재사용성을 높이는 것이 아키텍처 관점에서 가장 적절합니다.",
+    "category": "Android",
+    "type": "MULTIPLE_CHOICE"
+  },
+  {
+    "id": 2,
+    "question": "'AndroidViewModel'을 상속받아 'Context'를 사용하는 것은, 단위 테스트(Unit Test) 시 'Context'를 Mocking해야 하는 복잡성을 야기하므로 권장되지 않는다.",
+    "options": [
+      "O",
+      "X"
+    ],
+    "correctAnswer": 1,
+    "explanation": "'AndroidViewModel'은 안드로이드 프레임워크(Context)에 대한 의존성을 생성합니다. 이로 인해 ViewModel의 순수 JVM 단위 테스트가 어려워지며, 'Context'를 Mocking해야 하는 등 테스트의 복잡성이 크게 증가합니다.",
+    "category": "Android",
+    "type": "OX"
+  },
+  {
+    "id": 3,
+    "question": "'GoogleSignManager'처럼 'ApplicationContext'가 필요하고 앱 전역에서 싱글톤으로 관리되어야 하는 객체가 있을 때, Hilt로 처리하는 가장 올바른 방법은 무엇인가?",
+    "options": [
+      "1) '@Binds'를 사용하여 'ActivityContext'를 직접 주입한다",
+      "2) '@AndroidViewModel'을 사용하고 'getApplication()'을 통해 'Context'를 전달한다",
+      "3) Hilt 모듈에서 '@Provides'와 '@Singleton'을 사용하여 'ApplicationContext'를 주입받아 객체를 제공한다",
+      "4) 'ViewModel'의 'init' 블록 안에서 'GoogleSignManager'를 직접 생성한다"
+    ],
+    "correctAnswer": 3,
+    "explanation": "외부 라이브러리 객체나 빌더 패턴이 필요한 객체는 Hilt 모듈의 '@Provides' 함수를 통해 생성 방법을 알려줘야 합니다. 'ApplicationContext'를 주입받고 '@Singleton' 스코프를 지정하여 앱 전역에서 단일 인스턴스를 사용하도록 보장하는 것이 타이밍 문제를 해결하는 올바른 방법입니다.",
+    "category": "Android",
+    "type": "MULTIPLE_CHOICE"
+  },
+  {
+    "id": 4,
+    "question": "'Room'의 'DAO'는 인터페이스임에도 불구하고 Repository에 주입될 수 있는데, 이는 Hilt가 런타임에 리플렉션으로 구현체를 생성하기 때문이다.",
+    "options": [
+      "O",
+      "X"
+    ],
+    "correctAnswer": 2,
+    "explanation": "'DAO'는 'Hilt'가 아닌, 'Room' 라이브러리가 '컴파일 타임'에 어노테이션 프로세서(KAPT/KSP)를 사용하여 실제 구현 클래스를 자동으로 생성하기 때문에 사용할 수 있습니다.",
+    "category": "Android",
+    "type": "OX"
+  },
+  {
+    "id": 5,
+    "question": "'Data Layer'의 'Retrofit Entity'나 'Room Entity'를 'Domain Layer'나 'ViewModel'에서 직접 사용하지 않고 'Mapper'를 두는 가장 실전적인 이유는 무엇인가?",
+    "options": [
+      "1) 'Entity'의 파일 크기를 줄이기 위해서이다",
+      "2) 'Room'과 'Retrofit'이 'data class'를 지원하지 않기 때문이다",
+      "3) 데이터 소스(API 명세, DB 스키마)의 변경이 상위 계층(비즈니스 로직)에 영향을 주지 않도록 하기 위해서이다",
+      "4) 'Hilt'가 'Entity'를 직접 주입할 수 없기 때문이다"
+    ],
+    "correctAnswer": 3,
+    "explanation": "Mapper는 각 계층의 관심사를 분리(SoC)하는 핵심적인 역할을 합니다. API 명세나 DB 스키마가 변경되어 'Entity'가 수정되더라도, Mapper가 중간에서 변환을 처리해주기 때문에 상위 계층인 Domain Layer나 UI Layer의 코드는 변경할 필요가 없어집니다.",
+    "category": "Android",
+    "type": "MULTIPLE_CHOICE"
+  },
+  {
+    "id": 6,
+    "question": "여러 모듈에 걸친 대규모 아키텍처 리팩토링을 진행할 때, 병합 충돌(Merge Conflict)의 위험을 최소화하기 위한 가장 실용적인 Git 브랜치 전략은 무엇인가?",
+    "options": [
+      "1) 'main' 브랜치에서 직접 모든 파일을 수정하고, 작업이 끝나면 한 번에 커밋한다",
+      "2) 'refactor' 브랜치를 기반으로 하되, 모듈 단위로 작업이 완료될 때마다 'dev' 브랜치에 점진적으로 병합한다",
+      "3) 'refactor' 브랜치 하나에서 모든 모듈을 수정한 뒤, 리팩토링이 전부 끝나면 'dev'에 한 번에 병합한다",
+      "4) 각 파일마다 브랜치를 생성하여 작업하고 'dev' 브랜치에 병합한다"
+    ],
+    "correctAnswer": 2,
+    "explanation": "모든 변경 사항을 하나의 브랜치에 쌓아두고 마지막에 한 번에 병합하려 하면, 충돌이 발생할 가능성이 매우 높고 해결하기 어렵습니다. 작업을 논리적 단위(예: 모듈)로 나누고, 완료될 때마다 점진적으로 병합하는 것이 충돌을 최소화하는 안정적인 전략입니다.",
+    "category": "Android",
+    "type": "MULTIPLE_CHOICE"
+  },
+  {
+    "id": 7,
+    "question": "'.gitignore'에 추가되지 않은 'google-service.json' 파일이 public 저장소에 PUSH되었다면, 가장 먼저 할 일은 저장소를 'private'으로 전환하는 것이다.",
+    "options": [
+      "O",
+      "X"
+    ],
+    "correctAnswer": 2,
+    "explanation": "키가 이미 노출되었다면, 저장소를 비공개로 전환하는 것만으로는 충분하지 않습니다. 가장 먼저 노출된 키를 Firebase/Google Cloud 콘솔에서 즉시 폐기(Revoke)하여 악용을 막아야 합니다. 그 후에 Git 기록에서 해당 파일을 완전히 제거하는 작업을 진행해야 합니다.",
+    "category": "Android",
+    "type": "OX"
+  },
+  {
+    "id": 8,
+    "question": "Composable 함수가 ViewModel로부터 여러 개의 개별 상태(예: 'isLoading', 'dataList', 'errorMsg')를 전달받는 것보다, 이를 'UiState'라는 단일 'data class'로 묶어 전달하는 것이 가독성과 유지보수성 측면에서 더 권장된다.",
+    "options": [
+      "O",
+      "X"
+    ],
+    "correctAnswer": 1,
+    "explanation": "여러 개의 개별 상태를 파라미터로 전달하는 대신, 화면에 필요한 모든 상태를 포함하는 'UiState' data class를 정의하면, Composable의 파라미터가 단순해지고 ViewModel에서 상태 관리가 용이해집니다.",
+    "category": "Android",
+    "type": "OX"
+  },
+  {
+    "id": 9,
+    "question": "'UiState' data class를 사용하는 MVVM 패턴에서, 'MVI' 패턴의 'Intent'를 도입하려는 궁극적인 목적은 무엇인가?",
+    "options": [
+      "1) 'Room Database'와의 연결을 더 쉽게 하기 위해서이다",
+      "2) 'Hilt' 의존성 주입을 더 쉽게 적용하기 위해서이다",
+      "3) 'ViewModel'의 보일러플레이트 코드를 줄이기 위해서이다",
+      "4) 상태 변경의 원인을 'Intent'라는 단일 통로로 강제하여, '단방향 데이터 흐름(UDF)'을 확립하고 상태 예측 가능성을 높이기 위해서이다"
+    ],
+    "correctAnswer": 4,
+    "explanation": "MVI는 사용자의 모든 액션을 'Intent'로 정의하고 ViewModel이 이를 받아 'State'를 갱신하며, View는 이 'State'만 구독합니다. 이를 통해 상태 변경의 원인을 명확히 추적하고 예측 가능성을 높이는 단방향 데이터 흐름을 확립할 수 있습니다.",
+    "category": "Android",
+    "type": "MULTIPLE_CHOICE"
+  },
+  {
+    "id": 10,
+    "question": "'viewModelScope.launch'를 사용하여 'suspend' 함수를 호출하는 것만으로도, 'Room' DB의 변경 사항을 실시간으로 구독하는 리액티브(reactive)한 데이터 처리가 가능하다.",
+    "options": [
+      "O",
+      "X"
+    ],
+    "correctAnswer": 2,
+    "explanation": "'viewModelScope.launch'는 일회성(one-shot) 비동기 작업에 적합합니다. 'Room'의 변경 사항을 지속적으로 구독하고 UI에 반영하는 리액티브 처리를 위해서는 'Flow'를 반환받아 'collect'해야 합니다.",
+    "category": "Android",
+    "type": "OX"
+  },
+  {
+    "id": 11,
+    "question": "'feature_quiz'와 'feature_wrongAnswer' 모듈이 모두 'QuizDatabase'를 필요로 할 때, 가장 올바른 Hilt 모듈 구성 방법은 무엇인가?",
+    "options": [
+      "1) 'feature_quiz'의 'DatabaseModule'을 'feature_wrongAnswer'가 'implementation'한다",
+      "2) 'DatabaseModule'을 ':data'와 같은 공통 모듈로 분리하고, 두 피처 모듈이 ':data' 모듈에 의존하도록 한다",
+      "3) 각 피처 모듈에 'QuizDatabase'를 제공하는 동일한 내용의 'DatabaseModule'을 각각 생성한다",
+      "4) ':app' 모듈에 'DatabaseModule'을 만들고, 두 피처 모듈에 객체를 직접 전달한다"
+    ],
+    "correctAnswer": 2,
+    "explanation": "피처 모듈 간의 의존성은 피해야 합니다. 공통으로 사용되는 의존성(DB, Repository 등)은 ':data'와 같은 별도의 공통 모듈로 분리하고, 각 피처 모듈이 이 공통 모듈에 의존하도록 설계하는 것이 올바른 멀티 모듈 DI 구성입니다.",
+    "category": "Android",
+    "type": "MULTIPLE_CHOICE"
+  },
+  {
+    "id": 12,
+    "question": "Gradle 멀티 모듈 프로젝트에서 'feature' 디렉토리 아래 'library' 모듈을 추가할 때, 'settings.gradle.kts'에 'include(\"feature.library\")'라고 작성해야 한다.",
+    "options": [
+      "O",
+      "X"
+    ],
+    "correctAnswer": 2,
+    "explanation": "Gradle에서 모듈 경로는 콜론(':')으로 구분합니다. 루트 프로젝트를 기준으로 ':디렉토리명:모듈명' 형식(예: 'include(\":feature:library\")')을 따라야 합니다. '.'은 디렉토리 구분이 아닙니다.",
+    "category": "Android",
+    "type": "OX"
+  },
+  {
+    "id": 13,
+    "question": "Hilt를 사용하기 전, 'ViewModelProvider(this, factory)'의 'this'는 생성될 'ViewModel'의 인스턴스를 의미한다.",
+    "options": [
+      "O",
+      "X"
+    ],
+    "correctAnswer": 2,
+    "explanation": "'this'는 'ViewModel'의 생명주기를 소유한 'ViewModelStoreOwner' (즉, Activity 또는 Fragment)를 의미합니다.",
+    "category": "Android",
+    "type": "OX"
+  },
+  {
+    "id": 14,
+    "question": "ViewModel의 단위 테스트(Unit Test)를 작성할 때, 'AndroidViewModel'을 상속받으면 'Context' 의존성으로 인해 순수 JVM 테스트가 불가능해지고, 'Instrumented Test'가 필요하게 된다.",
+    "options": [
+      "O",
+      "X"
+    ],
+    "correctAnswer": 1,
+    "explanation": "'AndroidViewModel'은 'Context'라는 안드로이드 프레임워크 의존성을 가지므로, 안드로이드 런타임 환경이 없는 순수 JVM 테스트(로컬 테스트)가 불가능해집니다. 따라서 에뮬레이터나 실제 기기가 필요한 Instrumented Test를 사용해야만 합니다.",
+    "category": "Android",
+    "type": "OX"
+  },
+  {
+    "id": 15,
+    "question": "'UseCase' 클래스에 'operator fun invoke()'를 구현하면, 해당 클래스의 인스턴스를 함수처럼 호출할 수 있어 코드가 간결해지는 실용적인 이점이 있다.",
+    "options": [
+      "O",
+      "X"
+    ],
+    "correctAnswer": 1,
+    "explanation": "'operator fun invoke()'를 구현하면 'myUseCase.invoke(params)' 대신 'myUseCase(params)' 형태로 클래스 인스턴스를 함수처럼 바로 호출할 수 있어, ViewModel에서 UseCase를 사용하는 코드가 더 간결해집니다.",
+    "category": "Android",
+    "type": "OX"
+  },
+  {
+    "id": 16,
+    "question": "대규모 리팩토링 시, 모든 변경 사항을 하나의 'refactor' 브랜치에 쌓아두고 마지막에 한 번만 'dev' 브랜치에 병합하는 것이 충돌을 한 번에 처리할 수 있어 효율적이다.",
+    "options": [
+      "O",
+      "X"
+    ],
+    "correctAnswer": 2,
+    "explanation": "이는 매우 위험한 전략입니다. 변경 사항이 너무 많으면 병합 충돌이 발생했을 때 해결하기가 매우 복잡하고 어려워집니다. 모듈이나 기능 단위로 작업을 나누어 점진적으로 병합하는 것이 훨씬 안전하고 효율적입니다.",
+    "category": "Android",
+    "type": "OX"
+  },
+  {
+    "id": 17,
+    "question": "화면 회전과 같은 '구성 변경' 시 'Activity'는 파괴되고 재생성되지만 'ViewModel' 인스턴스는 유지된다. 이 과정의 핵심 원리로 올바른 것은 무엇인가?",
+    "options": [
+      "1) 'Hilt'의 '@Singleton' 스코프가 'ViewModel'의 재생성을 막기 때문이다.",
+      "2) 'Room Database'가 'ViewModel'의 모든 상태를 디스크에 자동으로 백업했다가 복원하기 때문이다.",
+      "3) 'onRetainNonConfigurationInstance'가 호출되어 'ViewModelStore'를 'NonConfigurationInstances' 객체에 저장하고, 새 'Activity'가 이를 전달받아 재사용하기 때문이다.",
+      "4) 'Zygote' 프로세스가 'ViewModel'의 메모리 공간을 별도로 분리하여 보호하기 때문이다."
+    ],
+    "correctAnswer": 3,
+    "explanation": "'Activity'가 (구성 변경으로) 파괴될 때 'onRetainNonConfigurationInstance'가 호출되어 'ViewModelStore'를 포함한 'NonConfigurationInstances' 객체를 저장합니다. 새로 생성된 'Activity'는 이 객체를 전달받아 기존 'ViewModelStore'를 재사용합니다.",
+    "category": "Android",
+    "type": "MULTIPLE_CHOICE"
+  },
+  {
+    "id": 18,
+    "question": "'@Preview' 어노테이션을 사용하여 'ViewModel'을 파라미터로 받는 Composable 스크린을 미리 보려 할 때 발생하는 실전적인 문제는 무엇인가?",
+    "options": [
+      "1) '@Preview'가 'ViewModel'의 'Flow'를 구독할 수 없어 컴파일 에러가 발생한다",
+      "2) '@Preview'가 'Hilt'로 주입된 'ViewModel'을 인식하지 못한다",
+      "3) '@Preview'는 'ViewModel'의 의존성을 주입(Hilt)하거나 로직을 실행할 수 없으므로, 가짜(Fake) 'ViewModel'을 수동으로 전달해줘야 하는 번거로움이 있다",
+      "4) 'ViewModel'을 파라미터로 받으면 '@Preview'의 빌드 속도가 현저히 느려진다"
+    ],
+    "correctAnswer": 3,
+    "explanation": "'@Preview'는 컴포저블의 UI 렌더링만 담당하며, 런타임 의존성(Hilt)이나 'ViewModel'의 비즈니스 로직을 실행할 수 없습니다. 따라서 'ViewModel'을 직접 파라미터로 받으면, 프리뷰를 보기 위해 'ViewModel'의 가짜 인스턴스를 매번 생성해서 전달해야 하는 번거로움이 발생합니다.",
+    "category": "Android",
+    "type": "MULTIPLE_CHOICE"
+  },
+  {
+    "id": 19,
+    "question": "매번 앱을 빌드/실행하여 기능을 확인하는 대신 테스트 코드를 작성할 때 얻는 가장 큰 실전적 가치는 무엇인가?",
+    "options": [
+      "1) 앱의 빌드 속도를 단축시킬 수 있다",
+      "2) 팀 협업 시, 내 코드 변경이 기존 기능을 손상시키지 않았음을 증명하고, 동료에게 '코드에 대한 책임과 안정성'을 제공할 수 있다",
+      "3) 'google-service.json'의 보안 키를 검증할 수 있다",
+      "4) 'Room Database'의 스키마를 자동으로 검증할 수 있다"
+    ],
+    "correctAnswer": 2,
+    "explanation": "테스트 코드는 단순히 버그를 찾는 것을 넘어, 해당 코드의 동작을 보증하는 '실행 가능한 문서' 역할을 합니다. 팀원이 리팩토링을 하거나 새 기능을 추가할 때, 기존 테스트를 통과함으로써 코드 변경에 대한 자신감과 안정성을 가질 수 있습니다.",
+    "category": "Android",
+    "type": "MULTIPLE_CHOICE"
+  },
+  {
+    "id": 20,
+    "question": "클린 아키텍처로 리팩토링하기 전, 'ViewModel'이 'Retrofit' 객체와 'Room'의 'DAO'에 직접 접근하는 것은 '관심사의 분리(SoC)' 원칙에 위배되는가?",
+    "options": [
+      "1) 위배된다",
+      "2) 위배되지 않는다",
+      "3) 'Retrofit'만 위배된다",
+      "4) 'DAO'만 위배된다"
+    ],
+    "correctAnswer": 1,
+    "explanation": "위배됩니다. ViewModel은 UI 상태를 관리하는 책임, Repository는 데이터 소스를 관리하는 책임을 가집니다. ViewModel이 직접 Retrofit(네트워크)이나 DAO(DB)에 접근하면, 데이터 소스 로직과 UI 상태 로직이 혼재되어 '관심사의 분리' 원칙을 명확히 위배하게 됩니다.",
+    "category": "Android",
+    "type": "MULTIPLE_CHOICE"
+  }
+]

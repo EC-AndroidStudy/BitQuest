@@ -7,11 +7,12 @@ plugins {
 
 android {
     namespace = "com.largeblueberry.bitquest"
-    compileSdk = 34 // 36에서 34로 변경
+    compileSdk = 35
+
     defaultConfig {
         applicationId = "com.largeblueberry.bitquest"
         minSdk = 26
-        targetSdk = 34 // 36에서 34로 변경
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -19,8 +20,14 @@ android {
             useSupportLibrary = true
         }
     }
+
     buildTypes {
+        debug {
+            buildConfigField("String", "GEMINI_API_KEY", "\"${findProperty("GEMINI_API_KEY")}\"")
+            isDebuggable = true
+        }
         release {
+            buildConfigField("String", "GEMINI_API_KEY", "\"${findProperty("GEMINI_API_KEY")}\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -28,19 +35,25 @@ android {
             )
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8 // 17에서 8로 변경
+        sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
-        jvmTarget = "1.8" // 17에서 1.8로 변경
+        jvmTarget = "1.8"
     }
+
     buildFeatures {
+        buildConfig = true  // BuildConfig 활성화
         compose = true
     }
+
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4" // 추가
+        kotlinCompilerExtensionVersion = "1.5.4"
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -48,9 +61,12 @@ android {
     }
 }
 
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
+
+    implementation("com.google.ai.client.generativeai:generativeai:0.7.0")
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))
@@ -67,6 +83,17 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
 
     // Test
     testImplementation(libs.junit)

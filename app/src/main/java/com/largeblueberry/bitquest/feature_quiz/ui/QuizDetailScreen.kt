@@ -1,160 +1,217 @@
 package com.largeblueberry.bitquest.feature_quiz.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.largeblueberry.bitquest.domain.model.Choice
-import com.largeblueberry.bitquest.domain.model.Quiz
-import com.largeblueberry.bitquest.domain.model.QuizType
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.largeblueberry.bitquest.feature_quiz.ui.components.ChoicesBlock
+import com.largeblueberry.bitquest.feature_quiz.ui.components.ExplanationBlock
+import com.largeblueberry.bitquest.feature_quiz.ui.components.ProblemBlock
+import com.largeblueberry.bitquest.feature_quiz.ui.components.ResultBlock
+import com.largeblueberry.bitquest.feature_quiz.ui.model.QuizContentState
+import com.largeblueberry.bitquest.feature_quiz.ui.model.QuizScreenState
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuizDetailScreen(
-    viewModel: QuizDetailViewModel = viewModel()
+    navController: NavController,
+    category: String? = null,
+    viewModel: QuizViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val quiz = uiState.quiz
+    // 1. ViewModel의 상태를 구독합니다.
+    val screenState by viewModel.uiState.collectAsState()
 
-    if (quiz == null) {
-        // 퀴즈 데이터가 로딩 중일 때 보여줄 화면
-        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-            CircularProgressIndicator()
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "퀴즈를 불러오는 중...")
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    // 카테고리가 있으면 제목에 표시
+                    val title = if (!category.isNullOrEmpty()) {
+                        "$category 퀴즈"
+                    } else {
+                        "BitQuest 퀴즈"
+                    }
+                    Text(title)
+                }
+            )
         }
+    ) { paddingValues ->
+        // 3. 화면의 본문 영역입니다.
+        Box(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            // 4. screenState의 종류에 따라 적절한 UI를 표시합니다. (가장 중요!)
+            when (val state = screenState) {
+                is QuizScreenState.Loading -> LoadingScreen()
+                is QuizScreenState.Error -> ErrorScreen(message = state.message)
+                is QuizScreenState.Success -> {
+                    // 성공 상태일 때만 실제 콘텐츠 UI를 렌더링합니다.
+                    QuizSuccessContent(
+                        contentState = state.content,
+                        viewModel = viewModel,
+                        // "홈으로 가기" 버튼이 눌렸을 때 실행할 동작을 전달합니다.
+                        onNavigateHome = { navController.popBackStack() }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun QuizSuccessContent(
+    contentState: QuizContentState,
+    viewModel: QuizViewModel,
+    onNavigateHome: () -> Unit
+) {
+    // ... (함수 상단은 동일) ...
+    if (contentState.isQuizFinished) {
+        // ...
     } else {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            // 문제 블럭 (제목과 내용 분리)
-            ProblemBlock(quiz = quiz)
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // 해설 블럭 (답안 제출 시에만 표시)
-            if (uiState.isAnswerSubmitted) {
-                ExplanationBlock(text = quiz.explanation)
-            }
-
-            Spacer(modifier = Modifier.weight(1f)) // 선택지를 하단에 위치시키기 위한 빈 공간
-
-            // 선택지 블럭 (퀴즈 유형에 따라 동적으로 변경)
-            ChoicesBlock(quiz = quiz)
-        }
-    }
-}
-
-@Composable
-fun ProblemBlock(quiz: Quiz) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF0F0F0))
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            // 퀴즈 제목
-            Text(text = quiz.title, fontWeight = FontWeight.Bold, fontSize = 22.sp)
-            Spacer(modifier = Modifier.height(16.dp))
-            // 퀴즈 내용
-            Text(text = quiz.content, fontSize = 16.sp)
-        }
-    }
-}
-
-@Composable
-fun ExplanationBlock(text: String) {
-    TextBlock(title = "해설", content = text, backgroundColor = Color(0xFFE0F7FA))
-}
-
-@Composable
-fun TextBlock(title: String, content: String, backgroundColor: Color) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = title, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = content, fontSize = 16.sp)
-        }
-    }
-}
-
-@Composable
-fun ChoicesBlock(quiz: Quiz) {
-    when (quiz.type) {
-        QuizType.MULTIPLE_CHOICE -> {
-            MultipleChoiceButtons(choices = quiz.choices)
-        }
-        QuizType.OX -> {
-            OxButtons()
-        }
-    }
-}
-
-@Composable
-fun MultipleChoiceButtons(choices: List<Choice>) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        choices.forEach {
-            Button(
-                onClick = { /* TODO: 객관식 선택 이벤트 */ },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp)
+        val currentQuiz = contentState.currentQuiz
+        if (currentQuiz == null) {
+            // ...
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
             ) {
-                Text(text = it.text, modifier = Modifier.padding(8.dp))
+                // ... (ProblemBlock, ChoicesBlock 등은 동일) ...
+                ProblemBlock(quiz = currentQuiz)
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    if(contentState.showResult) {
+                        contentState.quizResult?.let { quizResult ->
+                            ExplanationBlock(text = currentQuiz.explanation)
+                            Spacer(modifier = Modifier.height(16.dp))
+                            ResultBlock(
+                                isCorrect = quizResult.isCorrect,
+                                message = quizResult.resultMessage
+                            )
+                        }
+                    }
+                    else {
+                        ChoicesBlock(
+                            quiz = currentQuiz,
+                            viewModel = viewModel,
+                            selectedAnswer = contentState.selectedAnswer,
+                            showResult = contentState.showResult
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Button(
+                        onClick = { viewModel.previousQuiz() },
+                        enabled = contentState.currentQuizIndex > 0 && !contentState.showResult
+                    ) {
+                        Text("이전")
+                    }
+
+                    Button(
+                        onClick = {
+                            if (contentState.showResult) {
+                                viewModel.nextQuiz()
+                            } else {
+                                // --- 여기가 핵심 수정 부분입니다 ---
+                                // 잘못된 UseCase 호출 대신 ViewModel의 submitAnswer()를 호출합니다.
+                                viewModel.submitAnswer()
+                            }
+                        },
+                        enabled = contentState.selectedAnswer != null
+                    ) {
+                        val buttonText = when {
+                            contentState.showResult && contentState.currentQuizIndex < contentState.quizzes.size - 1 -> "다음 문제"
+                            contentState.showResult && contentState.currentQuizIndex == contentState.quizzes.size - 1 -> "결과 보기"
+                            else -> "정답 확인"
+                        }
+                        Text(buttonText)
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun OxButtons() {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+private fun QuizEndScreen(
+    onNavigateHome: () -> Unit,
+    onRestartQuiz: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Button(
-            onClick = { /* TODO: O 버튼 클릭 이벤트 */ },
-            shape = RoundedCornerShape(16.dp),
-            modifier = Modifier
-                .weight(1f)
-                .aspectRatio(1f)
-        ) {
-            Text(text = "O", fontSize = 48.sp)
+        Text(text = "모든 퀴즈를 완료했습니다!", style = MaterialTheme.typography.headlineSmall )
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(onClick = onNavigateHome, modifier = Modifier.fillMaxWidth()) {
+            Text("홈으로 돌아가기")
         }
-
-        Button(
-            onClick = { /* TODO: X 버튼 클릭 이벤트 */ },
-            shape = RoundedCornerShape(16.dp),
-            modifier = Modifier
-                .weight(1f)
-                .aspectRatio(1f)
-        ) {
-            Text(text = "X", fontSize = 48.sp)
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedButton(onClick = onRestartQuiz, modifier = Modifier.fillMaxWidth()) {
+            Text("다시 풀기")
         }
     }
+}
+
+
+
+@Composable
+private fun LoadingScreen() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        CircularProgressIndicator()
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "퀴즈를 불러오는 중...")
+    }
+}
+
+@Composable
+private fun ErrorScreen(message: String) {
+    Text(text = "오류가 발생했습니다: $message", color = MaterialTheme.colorScheme.error)
 }
