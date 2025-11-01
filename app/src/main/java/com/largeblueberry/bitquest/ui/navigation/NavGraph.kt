@@ -14,9 +14,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-// import com.largeblueberry.bitquest.ui.screens.MainScreen
+// import com.largeblueberry.bitquest.feature_main.MainScreen
 // import com.largeblueberry.bitquest.ui.screens.ProfileScreen
-// import com.largeblueberry.bitquest.ui.screens.QuizDetailScreen
+// import com.largeblueberry.bitquest.feature_quiz.ui.QuizDetailScreen
 // import com.largeblueberry.bitquest.ui.screens.ResultScreen
 
 

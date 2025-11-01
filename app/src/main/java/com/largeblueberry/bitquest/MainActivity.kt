@@ -3,11 +3,10 @@ package com.largeblueberry.bitquest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.largeblueberry.bitquest.ui.screens.QuizDetailScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.largeblueberry.bitquest.ui.screens.MainScreen
+import com.largeblueberry.bitquest.feature_main.MainScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.largeblueberry.bitquest.ui.navigation.Screen

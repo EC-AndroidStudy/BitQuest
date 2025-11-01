@@ -1,4 +1,4 @@
-package com.largeblueberry.bitquest.ui.screens
+package com.largeblueberry.bitquest.feature_main
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
