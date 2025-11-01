@@ -1,6 +1,3 @@
-// 🔹 앱 모듈 build.gradle.kts
-// Hilt + Compose + KSP 기반의 안드로이드 앱 설정
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -10,15 +7,12 @@ plugins {
 
 android {
     namespace = "com.largeblueberry.bitquest"
-    compileSdk = 34 // 36에서 34로 변경
-<<<<<<< HEAD
+    compileSdk = 35 // 34에서 35로 변경
 
-=======
->>>>>>> dev
     defaultConfig {
         applicationId = "com.largeblueberry.bitquest"
         minSdk = 26
-        targetSdk = 34 // 36에서 34로 변경
+        targetSdk = 35 // 34에서 35로 변경
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -26,6 +20,7 @@ android {
             useSupportLibrary = true
         }
     }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -37,28 +32,22 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8 // 17에서 8로 변경
+        sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = "1.8" // 17에서 1.8로 변경
+        jvmTarget = "1.8"
     }
 
     buildFeatures {
         compose = true
     }
-<<<<<<< HEAD
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4" // 추가
+        kotlinCompilerExtensionVersion = "1.5.4"
     }
 
-=======
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4" // 추가
-    }
->>>>>>> dev
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -86,6 +75,17 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+
     // Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -94,8 +94,4 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> dev
