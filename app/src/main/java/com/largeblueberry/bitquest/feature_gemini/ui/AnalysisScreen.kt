@@ -44,10 +44,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.largeblueberry.bitquest.feature_WrongAnswerNote.data.WrongAnswer
 import com.largeblueberry.bitquest.feature_gemini.AnalysisResult
 import com.largeblueberry.bitquest.feature_gemini.AnalysisUiState
-import com.largeblueberry.bitquest.feature_gemini.ui.AnalysisViewModel
-import com.largeblueberry.bitquest.feature_gemini.WrongAnswer
+import kotlin.collections.isNotEmpty
+
 
 // 컬러 팔레트 정의
 object AnalysisColors {

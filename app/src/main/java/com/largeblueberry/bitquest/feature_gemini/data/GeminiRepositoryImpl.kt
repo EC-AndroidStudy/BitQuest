@@ -2,9 +2,10 @@ package com.largeblueberry.bitquest.feature_gemini.data
 
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.gson.Gson
+import com.largeblueberry.bitquest.feature_WrongAnswerNote.data.WrongAnswer
 import com.largeblueberry.bitquest.feature_gemini.AnalysisResult
 import com.largeblueberry.bitquest.feature_gemini.domain.GeminiRepository
-import com.largeblueberry.bitquest.feature_gemini.WrongAnswer
+
 import javax.inject.Inject
 import javax.inject.Singleton
 

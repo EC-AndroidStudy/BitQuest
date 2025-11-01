@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.largeblueberry.bitquest.feature_WrongAnswerNote.data.WrongAnswer
+import com.largeblueberry.bitquest.feature_WrongAnswerNote.domain.usecase.SaveWrongAnswerUseCase
 import com.largeblueberry.bitquest.feature_quiz.domain.usecase.CheckAnswerUseCase
 import com.largeblueberry.bitquest.feature_quiz.domain.usecase.GetAllQuizzesUseCase
 import com.largeblueberry.bitquest.feature_quiz.domain.usecase.GetQuizByIdUseCase
@@ -29,6 +31,7 @@ class QuizViewModel @Inject constructor(
     private val checkAnswerUseCase: CheckAnswerUseCase,
     private val getQuizzesByCategoryUseCase: GetQuizzesByCategoryUseCase,
     private val getQuizzesByTypeUseCase: GetQuizzesByTypeUseCase,
+    private val saveWrongAnswerUseCase: SaveWrongAnswerUseCase, // 추가
     private val uiMapper: QuizUiMapper,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -61,7 +64,7 @@ class QuizViewModel @Inject constructor(
         updateSuccessState { it.copy(selectedAnswer = answerIndex) }
     }
 
-    // checkAnswer 함수는 삭제하고, 이 함수를 사용합니다.
+    // 오답노트 기능이 추가된 submitAnswer 함수
     fun submitAnswer() {
         updateSuccessState { content ->
             val quiz = content.currentQuiz ?: return@updateSuccessState content
@@ -70,6 +73,26 @@ class QuizViewModel @Inject constructor(
             val domainQuiz = uiMapper.mapToDomain(quiz)
             val domainResult = checkAnswerUseCase(domainQuiz, answer)
             val uiResult = uiMapper.mapResultToUiModel(domainResult)
+
+            // 오답인 경우 저장
+            if (!uiResult.isCorrect) {
+                viewModelScope.launch {
+                    val wrongAnswer = WrongAnswer(
+                        quizId = quiz.id.toString(),
+                        question = quiz.question,
+                        userAnswer = quiz.options.getOrNull(answer) ?: "알 수 없음",
+                        correctAnswer = quiz.options.getOrNull(quiz.correctAnswer) ?: "알 수 없음",
+                        explanation = quiz.explanation,
+                        category = category ?: "기타"
+                    )
+                    try {
+                        saveWrongAnswerUseCase(wrongAnswer)
+                        Log.d("QuizViewModel", "오답 저장 완료: ${wrongAnswer.question}")
+                    } catch (e: Exception) {
+                        Log.e("QuizViewModel", "오답 저장 실패", e)
+                    }
+                }
+            }
 
             content.copy(
                 quizResult = uiResult,
@@ -134,7 +157,6 @@ class QuizViewModel @Inject constructor(
         }
     }
 
-    // 더 명확한 이름의 새로운 헬퍼 함수
     private fun updateSuccessState(block: (QuizContentState) -> QuizContentState) {
         _uiState.update { currentState ->
             if (currentState is QuizScreenState.Success) {

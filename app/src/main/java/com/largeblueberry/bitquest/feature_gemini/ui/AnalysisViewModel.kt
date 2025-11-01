@@ -2,8 +2,8 @@ package com.largeblueberry.bitquest.feature_gemini.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.largeblueberry.bitquest.feature_WrongAnswerNote.data.WrongAnswer
 import com.largeblueberry.bitquest.feature_gemini.AnalysisUiState
-import com.largeblueberry.bitquest.feature_gemini.WrongAnswer
 import com.largeblueberry.bitquest.feature_gemini.domain.GeminiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

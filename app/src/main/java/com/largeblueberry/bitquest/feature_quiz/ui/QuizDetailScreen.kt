@@ -172,5 +172,3 @@ private fun QuizSuccessContent(
         }
     }
 }
-
-
