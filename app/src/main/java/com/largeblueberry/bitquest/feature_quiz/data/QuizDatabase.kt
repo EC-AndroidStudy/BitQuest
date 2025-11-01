@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 
 // QuizDatabase.kt
 @Database(
-    entities = [Quiz::class],
+    entities = [QuizEntity::class],
     version = 1,
     exportSchema = false
 )

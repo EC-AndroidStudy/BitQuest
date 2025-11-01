@@ -6,6 +6,8 @@ import com.largeblueberry.bitquest.feature_quiz.data.mapper.QuizMapper
 import com.largeblueberry.bitquest.feature_quiz.domain.QuizRepository
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.largeblueberry.bitquest.feature_quiz.domain.model.Quiz
+import com.largeblueberry.bitquest.feature_quiz.domain.model.QuizType
 
 @Singleton
 class QuizRepositoryImpl @Inject constructor(
@@ -20,7 +22,7 @@ class QuizRepositoryImpl @Inject constructor(
 
     override suspend fun getQuizById(id: Int): Quiz? {
         val entity = quizDao.getQuizById(id)
-        return entity?.let { mapper.mapToDomain(it) }
+        return mapper.mapToDomain(entity)
     }
 
     override suspend fun getQuizzesByCategory(category: String): List<Quiz> {

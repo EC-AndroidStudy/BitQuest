@@ -49,14 +49,14 @@ class QuizUiMapper @Inject constructor() {
         )
     }
 
-    private fun mapQuizTypeToUi(domainType: QuizType): QuizTypeUi {
+    fun mapQuizTypeToUi(domainType: QuizType): QuizTypeUi {
         return when (domainType) {
             QuizType.OX -> QuizTypeUi.OX
             QuizType.MULTIPLE_CHOICE -> QuizTypeUi.MULTIPLE_CHOICE
         }
     }
 
-    private fun mapQuizTypeToDomain(uiType: QuizTypeUi): QuizType {
+    fun mapQuizTypeToDomain(uiType: QuizTypeUi): QuizType {
         return when (uiType) {
             QuizTypeUi.OX -> QuizType.OX
             QuizTypeUi.MULTIPLE_CHOICE -> QuizType.MULTIPLE_CHOICE
