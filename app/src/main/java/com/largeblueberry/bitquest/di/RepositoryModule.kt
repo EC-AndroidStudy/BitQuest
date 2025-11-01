@@ -2,8 +2,6 @@ package com.largeblueberry.bitquest.di
 
 import com.largeblueberry.bitquest.data.local.QuizLocalDataSource
 import com.largeblueberry.bitquest.data.local.QuizLocalDataSourceImpl
-import com.largeblueberry.bitquest.data.repository.QuizRepositoryImpl
-import com.largeblueberry.bitquest.domain.repository.QuizRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
