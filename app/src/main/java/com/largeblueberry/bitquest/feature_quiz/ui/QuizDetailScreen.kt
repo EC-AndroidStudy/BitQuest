@@ -95,7 +95,10 @@ private fun QuizSuccessContent(
 ) {
     // ... (함수 상단은 동일) ...
     if (contentState.isQuizFinished) {
-        // ...
+        QuizEndScreen (
+            onNavigateHome = onNavigateHome,
+            onRestartQuiz = { viewModel.restartQuiz() }
+        )
     } else {
         val currentQuiz = contentState.currentQuiz
         if (currentQuiz == null) {
@@ -169,6 +172,30 @@ private fun QuizSuccessContent(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun QuizEndScreen(
+    onNavigateHome: () -> Unit,
+    onRestartQuiz: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = "모든 퀴즈를 완료했습니다!", style = MaterialTheme.typography.headlineSmall )
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(onClick = onNavigateHome, modifier = Modifier.fillMaxWidth()) {
+            Text("홈으로 돌아가기")
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedButton(onClick = onRestartQuiz, modifier = Modifier.fillMaxWidth()) {
+            Text("다시 풀기")
         }
     }
 }
