@@ -2,7 +2,6 @@ package com.largeblueberry.bitquest.data.local
 
 import com.largeblueberry.bitquest.feature_quiz.domain.MultipleChoiceQuiz
 import com.largeblueberry.bitquest.feature_quiz.domain.OxQuiz
-import com.largeblueberry.bitquest.feature_quiz.domain.Quiz
 import com.largeblueberry.bitquest.feature_quiz.domain.QuizModel
 
 interface QuizLocalDataSource {

@@ -2,7 +2,6 @@ package com.largeblueberry.bitquest.data.repository
 
 import com.largeblueberry.bitquest.data.local.QuizLocalDataSource
 import com.largeblueberry.bitquest.feature_quiz.domain.QuizModel
-import com.largeblueberry.bitquest.domain.repository.QuizRepository
 import javax.inject.Inject
 
 /**
