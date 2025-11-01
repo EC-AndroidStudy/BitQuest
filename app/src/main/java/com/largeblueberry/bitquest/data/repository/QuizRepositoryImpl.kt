@@ -1,9 +1,10 @@
 package com.largeblueberry.bitquest.data.repository
 
 import com.largeblueberry.bitquest.data.local.QuizLocalDataSource
-import com.largeblueberry.bitquest.domain.model.Quiz
+import com.largeblueberry.bitquest.feature_quiz.domain.QuizModel
 import com.largeblueberry.bitquest.domain.repository.QuizRepository
 import javax.inject.Inject
+
 /**
  * [작업 담당자: Android 개발자 (Repository 구현 경험)]
  *
@@ -18,7 +19,7 @@ import javax.inject.Inject
 class QuizRepositoryImpl @Inject constructor(
     private val localDataSource: QuizLocalDataSource
 ) : QuizRepository {
-    override fun getQuizzes(): List<Quiz> {
+    override fun getQuizzes(): List<QuizModel> {
         return localDataSource.getQuizzes()
     }
 }

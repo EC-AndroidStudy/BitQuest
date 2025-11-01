@@ -25,9 +25,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.largeblueberry.bitquest.domain.model.Choice
-import com.largeblueberry.bitquest.domain.model.Quiz
-import com.largeblueberry.bitquest.domain.model.QuizType
+import com.largeblueberry.bitquest.feature_quiz.domain.MultipleChoiceQuiz
+import com.largeblueberry.bitquest.feature_quiz.domain.OxQuiz
+import com.largeblueberry.bitquest.feature_quiz.domain.QuizModel
 
 @Composable
 fun QuizDetailScreen(
@@ -38,7 +38,11 @@ fun QuizDetailScreen(
 
     if (quiz == null) {
         // 퀴즈 데이터가 로딩 중일 때 보여줄 화면
-        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             CircularProgressIndicator()
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "퀴즈를 불러오는 중...")
@@ -62,24 +66,24 @@ fun QuizDetailScreen(
             Spacer(modifier = Modifier.weight(1f)) // 선택지를 하단에 위치시키기 위한 빈 공간
 
             // 선택지 블럭 (퀴즈 유형에 따라 동적으로 변경)
-            ChoicesBlock(quiz = quiz)
+            ChoicesBlock(quiz = quiz, viewModel = viewModel)
         }
     }
 }
 
 @Composable
-fun ProblemBlock(quiz: Quiz) {
+fun ProblemBlock(quiz: QuizModel) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFF0F0F0))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            // 퀴즈 제목
-            Text(text = quiz.title, fontWeight = FontWeight.Bold, fontSize = 22.sp)
+            // 퀴즈 주제(제목)
+            Text(text = quiz.subject, fontWeight = FontWeight.Bold, fontSize = 22.sp)
             Spacer(modifier = Modifier.height(16.dp))
-            // 퀴즈 내용
-            Text(text = quiz.content, fontSize = 16.sp)
+            // 퀴즈 문제(내용)
+            Text(text = quiz.question, fontSize = 16.sp)
         }
     }
 }
@@ -105,40 +109,49 @@ fun TextBlock(title: String, content: String, backgroundColor: Color) {
 }
 
 @Composable
-fun ChoicesBlock(quiz: Quiz) {
-    when (quiz.type) {
-        QuizType.MULTIPLE_CHOICE -> {
-            MultipleChoiceButtons(choices = quiz.choices)
+fun ChoicesBlock(quiz: QuizModel, viewModel: QuizDetailViewModel) {
+    when (quiz) {
+        is MultipleChoiceQuiz -> {
+            MultipleChoiceButtons(
+                choices = quiz.choices,
+                onAnswerSelected = { index ->
+                    // TODO: viewModel.onAnswerSelected(index) 호출
+                }
+            )
         }
-        QuizType.OX -> {
-            OxButtons()
+        is OxQuiz -> {
+            OxButtons(
+                onAnswerSelected = { answer ->
+                    // TODO: viewModel.onAnswerSelected(answer) 호출
+                }
+            )
         }
     }
 }
 
 @Composable
-fun MultipleChoiceButtons(choices: List<Choice>) {
+fun MultipleChoiceButtons(choices: List<String>, onAnswerSelected: (Int) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        choices.forEach {
+        choices.forEachIndexed { index, text ->
             Button(
-                onClick = { /* TODO: 객관식 선택 이벤트 */ },
+                onClick = { onAnswerSelected(index) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp)
             ) {
-                Text(text = it.text, modifier = Modifier.padding(8.dp))
+                Text(text = text, modifier = Modifier.padding(8.dp))
             }
         }
     }
 }
 
 @Composable
-fun OxButtons() {
+fun OxButtons(onAnswerSelected: (Boolean) -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Button(
-            onClick = { /* TODO: O 버튼 클릭 이벤트 */ },
+            onClick = { onAnswerSelected(true) },
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .weight(1f)
@@ -148,7 +161,7 @@ fun OxButtons() {
         }
 
         Button(
-            onClick = { /* TODO: X 버튼 클릭 이벤트 */ },
+            onClick = { onAnswerSelected(false) },
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .weight(1f)
