@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.largeblueberry.bitquest.feature_main.MainScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.largeblueberry.bitquest.feature_quiz.ui.QuizDetailScreen
 import com.largeblueberry.bitquest.ui.navigation.Screen
 import com.largeblueberry.bitquest.ui.theme.BitQuestTheme
 
@@ -17,8 +18,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             BitQuestTheme {
-                // 앱의 전체 네비게이션을 관리할 NavHost 설정
-                BitQuestApp()
+                // 임시로 QuizDetailScreen을 시작 화면으로 설정
+                QuizDetailScreen()
+
+                // 기존 코드 (롤백을 위해 주석 처리)
+                // BitQuestApp()
             }
         }
     }

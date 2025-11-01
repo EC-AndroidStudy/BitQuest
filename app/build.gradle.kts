@@ -1,3 +1,6 @@
+// 🔹 앱 모듈 build.gradle.kts
+// Hilt + Compose + KSP 기반의 안드로이드 앱 설정
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -8,6 +11,10 @@ plugins {
 android {
     namespace = "com.largeblueberry.bitquest"
     compileSdk = 34 // 36에서 34로 변경
+<<<<<<< HEAD
+
+=======
+>>>>>>> dev
     defaultConfig {
         applicationId = "com.largeblueberry.bitquest"
         minSdk = 26
@@ -28,19 +35,30 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8 // 17에서 8로 변경
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8" // 17에서 1.8로 변경
     }
+
     buildFeatures {
         compose = true
     }
+<<<<<<< HEAD
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.4" // 추가
     }
+
+=======
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.4" // 추가
+    }
+>>>>>>> dev
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -76,4 +94,8 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> dev
