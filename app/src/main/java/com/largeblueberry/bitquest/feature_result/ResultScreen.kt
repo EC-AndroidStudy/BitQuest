@@ -24,13 +24,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-// import androidx.hilt.navigation.compose.hiltViewModel // <- 이 줄을 삭제하거나 주석 처리합니다.
-import androidx.lifecycle.viewmodel.compose.viewModel // <- 이 줄을 추가합니다.
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.largeblueberry.bitquest.ui.navigation.Screen
 import com.largeblueberry.bitquest.ui.theme.BitQuestTheme
-import com.largeblueberry.bitquest.ui.screens.ResultUiState
-import com.largeblueberry.bitquest.ui.screens.ResultViewModel
+
 
 /**
  * [작업 담당자: Android 개발자]
@@ -55,7 +54,6 @@ sealed class ResultEvent {
 @Composable
 fun ResultScreen(
     navController: NavController,
-    // hiltViewModel() 대신 기본 viewModel() 함수를 사용합니다.
     viewModel: ResultViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -125,10 +123,10 @@ private fun ActionButtonsSection(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
-            onClick = { onEvent(ResultEvent.OnReviewClick) },
+            onClick = { navController.navigate(Screen.ReviewNotes.route) },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("틀린 문제 다시 보기")
+            Text("오답노트 보기")
         }
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -158,7 +156,6 @@ private fun ActionButtonsSection(
 @Composable
 private fun ResultScreenPreview() {
     BitQuestTheme {
-        // Preview가 ViewModel에 직접 의존하지 않도록 Content 함수를 호출합니다.
         ResultScreenContent(
             uiState = ResultUiState(totalQuestions = 10, correctAnswers = 8, score = 80),
             onEvent = {},

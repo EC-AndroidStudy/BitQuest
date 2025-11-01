@@ -13,4 +13,5 @@ sealed class Screen(val route: String) {
         fun createRoute(category: String) = "quiz_category/$category"
     }
     object FieldSelection : Screen("field_selection")
+    object ReviewNotes : Screen("reviewNotes")
 }
