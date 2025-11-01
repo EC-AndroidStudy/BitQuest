@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".BitQuestApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,11 +15,26 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
+            <!-- 앱 아이콘을 눌러 실행할 때 사용되는 기본 인텐트 필터 -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- ▼▼▼▼▼ 여기부터 추가된 딥링크 인텐트 필터 ▼▼▼▼▼ -->
+            <intent-filter>
+                <!-- 외부(웹 브라우저, 다른 앱 등)에서 URL을 통해 액티비티를 열 수 있게 함 -->
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- 처리할 URL 패턴 정의: "https://bitquest.app/quiz/..." -->
+                <data
+                    android:scheme="https"
+                    android:host="bitquest.app"
+                    android:pathPrefix="/quiz" />
+            </intent-filter>
+            <!-- ▲▲▲▲▲ 여기까지 추가된 딥링크 인텐트 필터 ▲▲▲▲▲ -->
         </activity>
     </application>
 
