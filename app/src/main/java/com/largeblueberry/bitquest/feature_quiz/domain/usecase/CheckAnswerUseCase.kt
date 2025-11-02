@@ -9,7 +9,7 @@ import javax.inject.Singleton
 @Singleton
 class CheckAnswerUseCase @Inject constructor() {
     operator fun invoke(quiz: Quiz, selectedAnswer: Int): QuizResult {
-        val isCorrect = selectedAnswer == quiz.correctAnswer
+        val isCorrect = selectedAnswer == quiz.correctAnswer-1
         return QuizResult(
             quiz = quiz,
             selectedAnswer = selectedAnswer,
